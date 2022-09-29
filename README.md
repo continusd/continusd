@@ -18,3 +18,29 @@ kubecfg delete test_service.jsonnet
 ```
 
 You can also try the above steps with `nusfriends-1.jsonnet` instead of `test_service.jsonnet`
+
+# Setting up Tekton
+
+```bash
+# Run this to setup tekton on our k8s.
+kubecfg update internal-tekton.jsonnet
+
+# Then monitor and wait:
+# When both tekton-pipelines-controller and tekton-pipelines-webhook show 1/1 under the READY column, the setup is done.
+kubectl get pods --namespace tekton-pipelines --watch
+
+```
+
+# Setting up Tekton Pipeline
+Ensure Tekton is setup first (see above)
+
+```bash
+# Run this to setup tekton on our k8s.
+kubecfg update test_pipeline.jsonnet
+
+# Then monitor the pipeline like so.
+kubectl get pipelineruns.tekton.dev --watch
+
+# View the CI logs
+kubectl logs --selector=tekton.dev/pipelineRun=test-run-run --all-containers -f --max-log-requests=8
+```
