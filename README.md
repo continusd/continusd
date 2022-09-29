@@ -16,3 +16,5 @@ curl localhost:8080 # expect to see "hello world" response
 # To clean up, just run
 kubecfg delete test_service.jsonnet
 ```
+
+You can also try the above steps with `nusfriends-1.jsonnet` instead of `test_service.jsonnet`
