@@ -6,10 +6,9 @@ local r = import '../k8s/role.libsonnet';
 {
   basic_read_access_role(
     namespace='',
-    subjectName='',
+    subjects=[],
   )::
     assert namespace != '' : 'namespace is required';
-    assert subjectName != '' : 'subjectName is required';
     local role_name = namespace + '-basic-read-access';
     [
       r.role(
@@ -19,11 +18,14 @@ local r = import '../k8s/role.libsonnet';
         resources=['*'],
         verbs=['get', 'list'],
       ),
-      r.rolebinding(
-        name=role_name + '-binding-' + subjectName,
-        namespace=namespace,
-        roleRefName=role_name,
-        subjectName=subjectName,
-      ),
+      [
+        r.rolebinding(
+          name=role_name + '-binding-' + subject,
+          namespace=namespace,
+          roleRefName=role_name,
+          subjectName=subject,
+        )
+        for subject in subjects
+      ],
     ],
 }

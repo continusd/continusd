@@ -3,6 +3,13 @@ local continuousdr = import 'continuousd/read_access_role.libsonnet';
 
 local NAMESPACE = 'nusfriends-1';
 
+local USERS = [
+  'yisheng',
+  'metilda',
+  'wengxian',
+  'shaowei',
+];
+
 continuousda.app(
   namespace=NAMESPACE,
   name='nus-jira-app',
@@ -12,5 +19,5 @@ continuousda.app(
   port=8080,
 ) +
 [
-  continuousdr.basic_read_access_role(NAMESPACE, 'yisheng'),
+  continuousdr.basic_read_access_role(NAMESPACE, USERS),
 ]
