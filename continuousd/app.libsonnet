@@ -14,6 +14,7 @@ local s = import '../k8s/service.libsonnet';
     containerPort=80,
     targetPort=80,
     port=8080,
+    serviceType='LoadBalancer',
   )::
     assert namespace != '' : 'namespace is required';
     assert name != '' : 'name is required';
@@ -25,12 +26,13 @@ local s = import '../k8s/service.libsonnet';
         image=image,
         appName=name,
         containerPort=containerPort,
+        replicas=replicas,
       ),
       s.service(
         namespace=namespace,
         name=name + '-service',
         selector=name,
-        serviceType='LoadBalancer',
+        serviceType=serviceType,
         port=port,
         targetPort=targetPort,
       ),
