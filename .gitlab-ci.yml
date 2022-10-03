@@ -4,7 +4,7 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-  - curl -o ~/kubecfg https://github.com/kubecfg/kubecfg/releases/download/v0.27.0/kubecfg_Linux_X64
+  - curl -o ~/kubecfg https://objects.githubusercontent.com/github-production-release-asset-2e65be/429002685/b27817be-b229-4132-9a59-7a7195d13b97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20221003%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221003T164351Z&X-Amz-Expires=300&X-Amz-Signature=33c825cd635f6c19c943e870c72eb5313cdac0002ebfb5370d380ecdbb9a040b&X-Amz-SignedHeaders=host&actor_id=32188551&key_id=0&repo_id=429002685&response-content-disposition=attachment%3B%20filename%3Dkubecfg_Linux_X64&response-content-type=application%2Foctet-stream
   - ./kubecfg update internal-tekton.jsonnet
   - kubectl cluster-info
   - kubectl get nodes
