@@ -19,7 +19,7 @@ build-image:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - echo "--- Create parameterized Tekton PipelineRun (using JSONNET)"
-    - ./kubecfg update test_pipeline.jsonnet
+    - ./kubecfg update nusfriends1.jsonnet
 
     - echo "--- Trigger PipelineRun in Tekton / K8s"
     # - PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')
