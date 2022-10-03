@@ -4,7 +4,7 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-  - chmod +x ./kubecfg version
+  - git update-index --chmod=+x kubecfg
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
@@ -19,7 +19,7 @@ build-image:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - echo "--- Create parameterized Tekton PipelineRun (using JSONNET)"
-    # - kubecfg update test_pipeline.jsonnet
+    - ./kubecfg update test_pipeline.jsonnet
 
     - echo "--- Trigger PipelineRun in Tekton / K8s"
     # - PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')
