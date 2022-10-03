@@ -4,7 +4,10 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
+  - kubectl cluster-info
   - kubectl get nodes
+  - echo "--- Test if Tekton pipelines are set up"
+  - kubectl get pods --namespace tekton-pipelines
 
 stages:
   - tkn-build
@@ -14,11 +17,15 @@ build-image:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
-    - echo "--- Create parameterized Tekton PipelineRun yaml"
-    - echo "tkn pipeline start buildpacks-test-pipeline"
+    - echo "--- Create parameterized Tekton PipelineRun (using JSONNET)"
+    # - kubecfg update test_pipeline.jsonnet
 
     - echo "--- Trigger PipelineRun in Tekton / K8s"
-    - echo "PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')"
+    # - PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')
 
     - echo "--- Show Tekton PipelineRun logs"
-    - echo "tkn pipelinerun logs $PIPELINE_RUN_NAME --follow"
+    # - tkn pipelinerun logs $PIPELINE_RUN_NAME --follow
+    - kubectl logs --selector=tekton.dev/pipelineRun=test-run-run --all-containers -f --max-log-requests=8
+
+    - echo "--- Check if Tekton PipelineRun Failed & exit GitLab Pipeline accordingly"
+    # - kubectl get pipelineruns $PIPELINE_RUN_NAME --output=jsonpath='{.status.conditions[*].reason}' | grep Failed && exit 1 || exit 0
