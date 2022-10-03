@@ -4,11 +4,12 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-  - chmod +x kubecfg
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
   - kubectl get pods --namespace tekton-pipelines
+  - echo "--- Change permission for kubecfg"
+  - chmod +x kubecfg
 
 stages:
   - tkn-build
@@ -18,15 +19,11 @@ build-image:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
-    - echo "--- Create parameterized Tekton PipelineRun (using JSONNET)"
-    - ./kubecfg update nusfriends1.jsonnet
+    # - echo "--- Deploy nusfriends1 via kubecfg directly (without Tekton)"
+    # - ./kubecfg update nusfriends1.jsonnet
 
-    - echo "--- Trigger PipelineRun in Tekton / K8s"
-    # - PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')
+    - echo "--- Create parameterized Tekton PipelineRun (using JSONNET)"
+    - ./kubecfg update test_pipeline.jsonnet
 
     - echo "--- Show Tekton PipelineRun logs"
-    # - tkn pipelinerun logs $PIPELINE_RUN_NAME --follow
     - kubectl logs --selector=tekton.dev/pipelineRun=test-run-run --all-containers -f --max-log-requests=8
-
-    - echo "--- Check if Tekton PipelineRun Failed & exit GitLab Pipeline accordingly"
-    # - kubectl get pipelineruns $PIPELINE_RUN_NAME --output=jsonpath='{.status.conditions[*].reason}' | grep Failed && exit 1 || exit 0
