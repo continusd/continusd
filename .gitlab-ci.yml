@@ -4,9 +4,7 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-  - curl https://github.com/kubecfg/kubecfg/releases/download/v0.27.0/kubecfg_Linux_X64
-  - ls
-  # - ./kubecfg update internal-tekton.jsonnet
+   - ./kubecfg update internal-tekton.jsonnet
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
