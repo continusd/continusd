@@ -4,11 +4,8 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-  - curl https://go.dev/dl/go1.19.1.linux-amd64.tar.gz
-  - tar -C /usr/local -xzf go1.19.1.linux-amd64.tar.gz
-  - vim ~/.bash_profile
-  - export PATH=$PATH:/usr/local/go/bin
-  - go version
+  - curl ~/kubecfg https://github.com/kubecfg/kubecfg/releases/download/v0.27.0/kubecfg_Linux_X64
+  - ./kubecfg update internal-tekton.jsonnet
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
