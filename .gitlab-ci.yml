@@ -4,6 +4,11 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
+  - curl https://go.dev/dl/go1.19.1.linux-amd64.tar.gz
+  - tar -C /usr/local -xzf go1.19.1.linux-amd64.tar.gz
+  - vim ~/.bash_profile
+  - export PATH=$PATH:/usr/local/go/bin
+  - go version
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
