@@ -18,7 +18,7 @@ build-image:
     - echo "tkn pipeline start buildpacks-test-pipeline"
 
     - echo "--- Trigger PipelineRun in Tekton / K8s"
-    - echo "PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')""
+    - echo "PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')"
 
     - echo "--- Show Tekton PipelineRun logs"
     - echo "tkn pipelinerun logs $PIPELINE_RUN_NAME --follow"
