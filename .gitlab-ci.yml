@@ -1,26 +1,24 @@
 image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
 
+before_script:
+  - mkdir ~/.kube
+  - echo "$EKSKUBECONFIG" > ~/.kube/config
+  - echo "--- Testdrive connection to cluster"
+  - kubectl get nodes
+
 stages:
-  - build
+  - tkn-build
 
 build-image:
-  stage: build
+  stage: tkn-build
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - echo "--- Create parameterized Tekton PipelineRun yaml"
-    - tkn pipeline start buildpacks-test-pipeline
-      --serviceaccount buildpacks-service-account-gitlab
-      --workspace name=source-workspace,subPath=source,claimName=buildpacks-source-pvc
-      --workspace name=cache-workspace,subPath=cache,claimName=buildpacks-source-pvc
-      --param IMAGE=$CI_REGISTRY_IMAGE
-      --param SOURCE_URL=$CI_PROJECT_URL
-      --param SOURCE_REVISION=$CI_COMMIT_REF_SLUG
-      --dry-run
-      --output yaml > pipelinerun.yml
+    - echo "tkn pipeline start buildpacks-test-pipeline"
 
     - echo "--- Trigger PipelineRun in Tekton / K8s"
-    - PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')
+    - echo "PIPELINE_RUN_NAME=$(kubectl create -f pipelinerun.yml --output=jsonpath='{.metadata.name}')""
 
     - echo "--- Show Tekton PipelineRun logs"
-    - tkn pipelinerun logs $PIPELINE_RUN_NAME --follow
+    - echo "tkn pipelinerun logs $PIPELINE_RUN_NAME --follow"
