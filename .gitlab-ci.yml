@@ -4,7 +4,7 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-   - ./kubecfg update internal-tekton.jsonnet
+  - ./kubecfg update internal-tekton.jsonnet
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
