@@ -4,7 +4,7 @@ before_script:
   - mkdir ~/.kube
   - echo "$EKSKUBECONFIG" > ~/.kube/config
   - echo "--- Testdrive connection to cluster"
-  - git update-index --chmod=+x kubecfg
+  - chmod=+x kubecfg
   - kubectl cluster-info
   - kubectl get nodes
   - echo "--- Test if Tekton pipelines are set up"
