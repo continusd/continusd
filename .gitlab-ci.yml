@@ -12,18 +12,22 @@ before_script:
   - chmod +x kubecfg
 
 stages:
-  - tkn-build
+  - deploy
 
 build-image:
-  stage: tkn-build
+  stage: deploy
   rules:
+    # Only run pipeline if the code is committed/ merged into the master branch 
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
-    # - echo "--- Deploy nusfriends1 via kubecfg directly (without Tekton)"
-    # - ./kubecfg update nusfriends1.jsonnet
+    # This will deploy into k8s cluster directly
+    - echo "--- Deploy nusfriends1 to k8s"
+    - ./kubecfg update nusfriends1.jsonnet
 
-    - echo "--- Create parameterized Tekton PipelineRun (using JSONNET)"
+    # This will deploy into k8s cluster via Tekton Pipeline
+    - echo "--- Deloy nusfriends to k8s via Tekton Pipeline"
     - ./kubecfg update test_pipeline.jsonnet
 
+    # Display logs from Tekton Pipeline
     - echo "--- Show Tekton PipelineRun logs"
     - kubectl logs --selector=tekton.dev/pipelineRun=test-run-run --all-containers -f --max-log-requests=8
