@@ -6,7 +6,6 @@ local v = import 'tekton/volume.libsonnet';
 
 local pipeline_name = 'my-first-ci-pipeline';
 local task_1 = 'deploy-application';
-local task_2 = 'bye-world';
 local tmp_vol = 'temp-vol';
 local namespace = 'nusfriends-1';
 local service_account_name = 'tekton-service-account';
@@ -102,22 +101,6 @@ local gitlab_secret_name = 'gitlab-creds';
       v.secret_volume(secretName=gitlab_secret_name),
     ],
   ),
-  t.task(
-    namespace=namespace,
-    name=task_2,
-    steps=[
-      t.step(
-        name='echo',
-        image='alpine',
-        script='#!/bin/sh\necho "Bye World"  \n',
-      ),
-      t.step(
-        name='echo-too',
-        image='alpine',
-        script='#!/bin/sh\necho "Bye World too"  \n',
-      ),
-    ],
-  ),
   p.pipeline(
     namespace=namespace,
     name=pipeline_name,
@@ -128,20 +111,10 @@ local gitlab_secret_name = 'gitlab-creds';
           name: task_1,
         },
       },
-      {
-        name: task_2,
-        runAfter: [
-          task_1,
-        ],
-        taskRef: {
-          name: task_2,
-        },
-      },
     ]
   ),
   p.pipeline_run(
     namespace=namespace,
-    name='test-run',
     pipeline=pipeline_name,
     serviceAccountName=service_account_name,
   ),
