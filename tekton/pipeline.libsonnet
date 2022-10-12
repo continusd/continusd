@@ -31,7 +31,7 @@
       apiVersion: 'tekton.dev/v1beta1',
       kind: 'PipelineRun',
       metadata: {
-        name: name + '-run',
+        name: name,
         namespace: namespace,
       },
       spec: {
