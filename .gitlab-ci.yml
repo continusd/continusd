@@ -21,8 +21,8 @@ build-image:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     # This will deploy into k8s cluster directly
-    - echo "--- Deploy nusfriends1 to k8s"
-    - ./kubecfg update nusfriends1.jsonnet
+    # - echo "--- Deploy nusfriends1 to k8s"
+    # - ./kubecfg update nusfriends1.jsonnet
 
     # This will deploy into k8s cluster via Tekton Pipeline
     - echo "--- Deloy nusfriends to k8s via Tekton Pipeline"
