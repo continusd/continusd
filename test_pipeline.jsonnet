@@ -114,6 +114,7 @@ local gitlab_secret_name = 'gitlab-creds';
     ]
   ),
   p.pipeline_run(
+    name=std.extVar('CI_COMMIT_SHA'),
     namespace=namespace,
     pipeline=pipeline_name,
     serviceAccountName=service_account_name,
