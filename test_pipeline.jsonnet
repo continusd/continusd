@@ -34,7 +34,6 @@ local gitlab_secret_name = 'gitlab-creds';
         name='clone-infrastructure-repo',
         image='alpine/git:2.36.2',
         command=['git'],
-        // TODO: change to "master" afterwards instead of "remove-namespace-creation"
         env=[
           {
             name: 'GIT_USERNAME',
@@ -57,7 +56,7 @@ local gitlab_secret_name = 'gitlab-creds';
             },
           },
         ],
-        args=['clone', '--branch', 'remove-namespace-creation', 'https://$(GIT_USERNAME):$(GIT_PASSWORD)@gitlab.com/continusd/infrastructure.git'],
+        args=['clone', '--branch', 'master', 'https://$(GIT_USERNAME):$(GIT_PASSWORD)@gitlab.com/continusd/infrastructure.git'],
         volumeMounts=[
           v.volume_mount(name=tmp_vol, mountPath='/git'),
           v.volume_mount(name=gitlab_secret_name, mountPath='/etc/gitlab-creds', readOnly=true),
