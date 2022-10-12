@@ -29,5 +29,6 @@ build-image:
     - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update test_pipeline.jsonnet
 
     # Display logs from Tekton Pipeline
+    # in nusfriends-1 namespace
     - echo "--- Show Tekton PipelineRun logs"
-    - kubectl logs --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA --all-containers -f --max-log-requests=8
+    - kubectl logs -n nusfriends-1 --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA --all-containers -f --max-log-requests=8
