@@ -4,7 +4,7 @@ local continuousdr = import 'continuousd/read_access_role.libsonnet';
 local NAMESPACE = 'nusfriends-1';
 
 local USERS = [
-  'yisheng',
+  'e0493359@u.nus.edu',
   'metilda',
   'wengxian',
   'shaowei',
