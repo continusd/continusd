@@ -4,7 +4,7 @@ local p = import 'tekton/pipeline.libsonnet';
 local t = import 'tekton/task.libsonnet';
 local v = import 'tekton/volume.libsonnet';
 
-local pipeline_name = 'my-first-ci-pipeline';
+local pipeline_name = 'nusfriends-1-app-pipeline';
 local task_1 = 'deploy-application';
 local tmp_vol = 'temp-vol';
 local namespace = 'nusfriends-1';
