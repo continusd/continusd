@@ -32,3 +32,7 @@ build-image:
     # in nusfriends-1 namespace
     - echo "--- Show Tekton PipelineRun logs"
     - kubectl logs -n nusfriends-1 --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA -f --max-log-requests=8 --pod-running-timeout=45s
+
+    # Hardcoded show external IP 
+    - echo "--- Your App is Running on IP ADDRESS..."
+    - kubectl get services -n nusfriends-1 nus-jira-app-service --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
