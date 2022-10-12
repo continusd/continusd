@@ -20,7 +20,7 @@ local s = import '../k8s/service.libsonnet';
     assert name != '' : 'name is required';
     assert image != '' : 'image is required';
     [
-      n.namespace(namespace),
+      //n.namespace(namespace),
       d.deployment(
         namespace=namespace,
         image=image,

@@ -28,4 +28,33 @@ local r = import '../k8s/role.libsonnet';
         for subject in subjects
       ],
     ],
+  /**
+    * super_access_role for a namespace.
+    */
+  super_access_role(
+    namespace='',
+    subjects=null,
+  )::
+    assert namespace != '' : 'namespace is required';
+    local role_name = namespace + '-super-access';
+    [
+      r.role(
+        namespace=namespace,
+        name=role_name,
+        apiGroups=['', '*'],
+        resources=['*'],
+        verbs=['*'],
+      ),
+      [
+        r.rolebinding(
+          namespace=namespace,
+          name=role_name + '-binding-' + subject,
+          roleRefName=role_name,
+          subjectName=subject,
+          subjectKind='ServiceAccount',
+          subjectApiGroup='',
+        )
+        for subject in subjects
+      ],
+    ],
 }
