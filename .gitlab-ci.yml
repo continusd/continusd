@@ -31,7 +31,7 @@ build-image:
     # Display logs from Tekton Pipeline
     # in nusfriends-1 namespace
     - echo "--- Show Tekton PipelineRun logs"
-    - kubectl logs -n nusfriends-1 --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA -f --all-containers --max-log-requests=8 --pod-running-timeout=45s
+    - kubectl logs -n nusfriends-1 --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA -f --all-containers --max-log-requests=8 --pod-running-timeout=45s --previous=false
 
     # Hardcoded show external IP 
     - echo "--- Your App is Running on IP ADDRESS..."
