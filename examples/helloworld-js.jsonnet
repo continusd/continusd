@@ -11,7 +11,7 @@ local USERS = [
 continuousda.app(
   namespace=NAMESPACE,
   name='my-project-name',
-  image='image-file',
+  image='pvermeyden/nodejs-hello-world:a1e8cf1edcc04e6d905078aed9861807f6da0da4',
   containerPort=80,
   targetPort=80,
   port=8088,
