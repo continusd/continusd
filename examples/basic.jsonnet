@@ -1,5 +1,5 @@
-local continuousda = import 'continuousd/app.libsonnet';
-local continuousdr = import 'continuousd/read_access_role.libsonnet';
+local continuousda = import '../continuousd/app.libsonnet';
+local continuousdr = import '../continuousd/read_access_role.libsonnet';
 
 local NAMESPACE = 'my-team-name';
 
