@@ -22,7 +22,7 @@ merge-with-master:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
     - yum install -y -q git
-    - git config user.name
+    - echo $CI_COMMIT_AUTHOR
     - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
 
 deploy-app:
