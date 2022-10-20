@@ -12,9 +12,17 @@ before_script:
   - chmod +x kubecfg
 
 stages:
+  - merge
   - deploy
 
-build-image:
+merge-with-master:
+  stage: merge
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  script:
+    - git diff-tree --name-only --no-commit-id $CI_MERGE_REQUEST_TARGET_BRANCH_SHA
+
+deploy-app:
   stage: deploy
   rules:
     # Only run pipeline if the code is committed/ merged into the master branch 
