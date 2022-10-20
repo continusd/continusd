@@ -1,15 +1,16 @@
 image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
 
-before_script:
-  - mkdir ~/.kube
-  - echo "$EKSKUBECONFIG" > ~/.kube/config
-  - echo "--- Testdrive connection to cluster"
-  - kubectl cluster-info
-  - kubectl get nodes
-  - echo "--- Test if Tekton pipelines are set up"
-  - kubectl get pods --namespace tekton-pipelines
-  - echo "--- Change permission for kubecfg"
-  - chmod +x kubecfg
+.before_script_template:
+  before_script:
+    - mkdir ~/.kube
+    - echo "$EKSKUBECONFIG" > ~/.kube/config
+    - echo "--- Testdrive connection to cluster"
+    - kubectl cluster-info
+    - kubectl get nodes
+    - echo "--- Test if Tekton pipelines are set up"
+    - kubectl get pods --namespace tekton-pipelines
+    - echo "--- Change permission for kubecfg"
+    - chmod +x kubecfg
 
 stages:
   - merge
@@ -23,6 +24,7 @@ merge-with-master:
     - git diff-tree --name-only --no-commit-id $CI_MERGE_REQUEST_TARGET_BRANCH_SHA
 
 deploy-app:
+  extends: .before_script_template
   stage: deploy
   rules:
     # Only run pipeline if the code is committed/ merged into the master branch 
