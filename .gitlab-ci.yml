@@ -27,7 +27,6 @@ merge-with-master:
     # - yum install -y git
     - git config user.name
     - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
-    - 
 
 deploy-app:
   extends: .before_script_template
