@@ -1,5 +1,8 @@
 image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
 
+services:
+  - alpine/git
+
 .before_script_template:
   before_script:
     - mkdir ~/.kube
@@ -21,8 +24,10 @@ merge-with-master:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
-    - yum install -y git
-    - git diff-tree --name-only --no-commit-id -r $CI_COMMIT_SHA
+    # - yum install -y git
+    - git config user.name
+    - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+    - 
 
 deploy-app:
   extends: .before_script_template
