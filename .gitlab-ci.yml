@@ -24,7 +24,7 @@ merge-with-master:
     - yum install -y -q git
     - echo $GITLAB_USER_LOGIN
     # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
-    - git diff --name-only $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME..$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    - git diff --name-only $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
 
 deploy-app:
   extends: .before_script_template
