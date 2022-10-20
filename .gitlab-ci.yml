@@ -22,7 +22,7 @@ merge-with-master:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
     - yum install -y git
-    - git diff-tree --name-only --no-commit-id $CI_MERGE_REQUEST_TARGET_BRANCH_SHA
+    - git diff-tree --name-only --no-commit-id -r $CI_COMMIT_SHA
 
 deploy-app:
   extends: .before_script_template
