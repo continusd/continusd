@@ -1,20 +1,33 @@
 image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
 
-before_script:
-  - mkdir ~/.kube
-  - echo "$EKSKUBECONFIG" > ~/.kube/config
-  - echo "--- Testdrive connection to cluster"
-  - kubectl cluster-info
-  - kubectl get nodes
-  - echo "--- Test if Tekton pipelines are set up"
-  - kubectl get pods --namespace tekton-pipelines
-  - echo "--- Change permission for kubecfg"
-  - chmod +x kubecfg
+.before_script_template:
+  before_script:
+    - mkdir ~/.kube
+    - echo "$EKSKUBECONFIG" > ~/.kube/config
+    - echo "--- Testdrive connection to cluster"
+    - kubectl cluster-info
+    - kubectl get nodes
+    - echo "--- Test if Tekton pipelines are set up"
+    - kubectl get pods --namespace tekton-pipelines
+    - echo "--- Change permission for kubecfg"
+    - chmod +x kubecfg
 
 stages:
+  - merge
   - deploy
 
-build-image:
+merge-with-master:
+  stage: merge
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  script:
+    - yum install -y -q git
+    - echo $GITLAB_USER_LOGIN
+    # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+    - git diff --name-only $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME..$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+
+deploy-app:
+  extends: .before_script_template
   stage: deploy
   rules:
     # Only run pipeline if the code is committed/ merged into the master branch 

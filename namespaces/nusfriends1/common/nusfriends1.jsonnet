@@ -6,7 +6,7 @@ local NAMESPACE = 'nusfriends-1';
 local USERS = [
   'e0493359@u.nus.edu',
   'e0165588@u.nus.edu',
-  'e0493660@u.nus.edu',
+  'wengxian',
   'shaowei',
 ];
 
