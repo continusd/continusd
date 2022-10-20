@@ -23,7 +23,7 @@ merge-with-master:
   script:
     - yum install -y -q git
     - echo $CI_COMMIT_AUTHOR
-    - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+    - git diff-tree --no-commit-id --name-only -r origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME -r $CI_COMMIT_SHA
 
 deploy-app:
   extends: .before_script_template
