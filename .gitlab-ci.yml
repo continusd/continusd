@@ -13,23 +13,27 @@ image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
     - chmod +x kubecfg
 
 stages:
+  - validate
   - merge
   - deploy
 
-merge-with-target:
-  stage: merge
+validate-merge:
+  stage: validate
   variables:
     NAMESPACE: '$GITLAB_USER_LOGIN'
     NAMESPACE_DIR: 'namespaces/$NAMESPACE'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  only:
+      refs:
+        - merge_requests
       changes:
         - $NAMESPACE_DIR/*
         - $NAMESPACE_DIR/**/*
   script:
     - echo "Files in $NAMESPACE_DIR changed"
-    - yum install -y -q git
-    - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+    # - yum install -y -q git
+    # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
 
 
 deploy-app:
