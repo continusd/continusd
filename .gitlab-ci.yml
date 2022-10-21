@@ -23,7 +23,7 @@ merge-with-target:
     NAMESPACE_DIR: 'namespaces/$NAMESPACE'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - changes:
+      changes:
         - $NAMESPACE_DIR/*
         - $NAMESPACE_DIR/**/*
   script:
