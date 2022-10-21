@@ -16,19 +16,42 @@ stages:
   - validate
   - deploy
 
-validate-merge:
+# ============================================ MR Pipelines Start ============================================
+# MR will be blocked if any pipeline failed/ no pipeline run
+
+# 1. Check if any main file is changed
+# - Fail the pipeline if any main file is changed (user should not have rights to modify main files)
+check-files-changed:
+  stage: validate
+  rules: 
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - ./*
+        - continuousd/*
+        - k8s/*
+        - tekton/*
+  script:
+  - echo "You do not have the rights to modify files outside of your namespace :("
+  - exit 1
+
+# Check if any file in user namespace is changed
+# - Ok if user only changed the files inside own's namespace
+# - Skip this pipeline if there are other files changed (outside user's namespace)
+validate-namespace:
   stage: validate
   variables:
     NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - $NAMESPACE_DIR/**/*
+        - namespaces/$GITLAB_USER_LOGIN/**/*
   script:
     - echo "Files in $NAMESPACE_DIR changed"
-    # - yum install -y -q git
-    # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+    - yum install -y -q git
+    - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
 
+
+# ============================================= MR Pipelines End =============================================
 
 deploy-app:
   extends: .before_script_template
