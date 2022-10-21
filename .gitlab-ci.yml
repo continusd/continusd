@@ -20,7 +20,7 @@ validate-merge:
   stage: validate
   variables:
     NAMESPACE: '$GITLAB_USER_LOGIN'
-    NAMESPACE_DIR: 'namespaces/$NAMESPACE'
+    NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
