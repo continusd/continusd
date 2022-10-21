@@ -14,7 +14,6 @@ image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
 
 stages:
   - validate
-  - merge
   - deploy
 
 validate-merge:
@@ -24,9 +23,6 @@ validate-merge:
     NAMESPACE_DIR: 'namespaces/$NAMESPACE'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  only:
-      refs:
-        - merge_requests
       changes:
         - $NAMESPACE_DIR/*
         - $NAMESPACE_DIR/**/*
