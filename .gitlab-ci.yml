@@ -23,7 +23,7 @@ validate-merge:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - namespaces/$GITLAB_USER_LOGIN/**/*
+        - $NAMESPACE_DIR/**/*
   script:
     - echo "Files in $NAMESPACE_DIR changed"
     # - yum install -y -q git
