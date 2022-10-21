@@ -16,15 +16,19 @@ stages:
   - merge
   - deploy
 
-merge-with-master:
+merge-with-target:
   stage: merge
+  variables:
+    NAMESPACE_DIR: 'namespaces/"$GITLAB_USER_LOGIN"/*'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - changes:
+        - $NAMESPACE_DIR
   script:
-    - yum install -y -q git
-    - echo $GITLAB_USER_LOGIN
+    - echo "Files in namespaces directory changed"
+    # - yum install -y -q git
     # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
-    - git diff --name-only $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+
 
 deploy-app:
   extends: .before_script_template
