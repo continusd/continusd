@@ -21,16 +21,14 @@ validate-merge:
   variables:
     NAMESPACE: '$GITLAB_USER_LOGIN'
     NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  #     changes:
-  #       - $NAMESPACE_DIR/*
-  #       - $NAMESPACE_DIR/**/*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - $NAMESPACE_DIR/**/*
   # only:
   #   refs:
   #     - merge_requests
   #   changes:
-  #   - $NAMESPACE_DIR/*
   #   - $NAMESPACE_DIR/**/*
   script:
     - echo "Files in $NAMESPACE_DIR changed"
