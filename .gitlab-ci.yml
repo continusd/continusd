@@ -24,12 +24,7 @@ validate-merge:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - $NAMESPACE_DIR/**/*
-  # only:
-  #   refs:
-  #     - merge_requests
-  #   changes:
-  #   - $NAMESPACE_DIR/**/*
+        - namespaces/wxchoong/**/*
   script:
     - echo "Files in $NAMESPACE_DIR changed"
     # - yum install -y -q git
