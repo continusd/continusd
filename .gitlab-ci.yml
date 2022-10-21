@@ -26,12 +26,12 @@ validate-merge:
   #     changes:
   #       - $NAMESPACE_DIR/*
   #       - $NAMESPACE_DIR/**/*
-  only:
-    refs:
-      - merge_requests
-    changes:
-    - $NAMESPACE_DIR/*
-    - $NAMESPACE_DIR/**/*
+  # only:
+  #   refs:
+  #     - merge_requests
+  #   changes:
+  #   - $NAMESPACE_DIR/*
+  #   - $NAMESPACE_DIR/**/*
   script:
     - echo "Files in $NAMESPACE_DIR changed"
     # - yum install -y -q git
