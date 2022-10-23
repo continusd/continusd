@@ -34,6 +34,20 @@ check-files-changed:
   - echo "You do not have the rights to modify files outside of your namespace :("
   - exit 1
 
+# Check if any file in other users namespace has been changed
+# - OK if no other namespace files has been changed
+validate-other-namespace:
+  stage: validate
+  variables:
+    USER: $GITLAB_USER_LOGIN
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - namespaces/!$USER/**/*
+  script:
+    - echo "Files in other namespaces changed"
+    - exit 1
+
 # Check if any file in user namespace is changed
 # - Ok if user only changed the files inside own's namespace
 # - Skip this pipeline if there are other files changed (outside user's namespace)
@@ -49,8 +63,7 @@ validate-namespace:
     - echo "Files in $NAMESPACE_DIR changed"
     - yum install -y -q git
     - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
-
-
+  
 # ============================================= MR Pipelines End =============================================
 
 deploy-app:
