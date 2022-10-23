@@ -1,7 +1,7 @@
 local continuousda = import 'continuousd/app.libsonnet';
 local continuousdr = import 'continuousd/read_access_role.libsonnet';
 
-local NAMESPACE = 'nusfriends-1';
+local NAMESPACE = 'wxchoong';
 
 local USERS = [
   'e0493359@u.nus.edu',
