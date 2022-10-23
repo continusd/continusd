@@ -45,7 +45,7 @@ validate-other-namespace:
       changes:
         - namespaces/[!USER]/**/*
   script:
-    - echo "Files in other namespaces changed"
+    - echo "FILES IN OTHER NAMESPACES CHANGED"
     - exit 1
 
 # Check if any file in user namespace is changed
