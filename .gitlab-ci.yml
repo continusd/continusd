@@ -39,11 +39,13 @@ check-files-changed:
 validate-other-namespace:
   stage: validate
   variables:
-    USER: $GITLAB_USER_LOGIN
+    NAMESPACE_DIR: '$GITLAB_USER_LOGIN/'
+    OWN_CHANGED: 'false'
+    OTHER_CHANGED: 'false'
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      changes:
-        - namespaces/[!USER]/**/*
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    changes:
+      - namespaces/[!$GITLAB_USER_LOGIN/]**/*
   script:
     - echo "FILES IN OTHER NAMESPACES CHANGED"
     - exit 1
@@ -51,18 +53,18 @@ validate-other-namespace:
 # Check if any file in user namespace is changed
 # - Ok if user only changed the files inside own's namespace
 # - Skip this pipeline if there are other files changed (outside user's namespace)
-validate-namespace:
-  stage: validate
-  variables:
-    NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      changes:
-        - namespaces/$GITLAB_USER_LOGIN/**/*
-  script:
-    - echo "Files in $NAMESPACE_DIR changed"
-    - yum install -y -q git
-    - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+# validate-own-namespace:
+#   stage: validate
+#   variables:
+#     NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+#       changes:
+#         - namespaces/$GITLAB_USER_LOGIN/**/*
+#   script:
+#     - echo "Files in $NAMESPACE_DIR changed"
+    # - yum install -y -q git
+    # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
   
 # ============================================= MR Pipelines End =============================================
 
