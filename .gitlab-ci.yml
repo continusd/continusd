@@ -45,7 +45,7 @@ validate-other-namespace:
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     changes:
-      - namespaces/[!$GITLAB_USER_LOGIN/]**/*
+      - namespaces/[!wxchoong]/**/*
   script:
     - echo "FILES IN OTHER NAMESPACES CHANGED"
     - exit 1
