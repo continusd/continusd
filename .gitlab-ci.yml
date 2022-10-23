@@ -43,8 +43,7 @@ validate-other-namespace:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - namespaces/**/*
-      when: never
+        - namespaces/[!USER]/**/*
   script:
     - echo "Files in other namespaces changed"
     - exit 1
