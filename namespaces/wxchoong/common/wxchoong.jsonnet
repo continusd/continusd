@@ -21,5 +21,3 @@ continuousda.app(
 [
   continuousdr.basic_read_access_role(NAMESPACE, USERS),
 ]
-
-local TEST = "THIS SHOULD PASS";
