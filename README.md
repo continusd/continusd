@@ -44,3 +44,14 @@ kubectl get pipelineruns.tekton.dev --watch
 # View the CI logs
 kubectl logs --selector=tekton.dev/pipelineRun=test-run-run --all-containers -f --max-log-requests=8
 ```
+
+# Setting up dashboards
+Do the above
+
+```bash
+# Run this to open the port
+kubecfg proxy
+
+# Run this common to get your token
+kubectl -n nusfriends-1 create token kubernetes-dashboard
+```

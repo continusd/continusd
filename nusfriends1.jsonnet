@@ -10,14 +10,17 @@ local USERS = [
   'shaowei',
 ];
 
-continuousda.app(
+local v =continuousda.app(
   namespace=NAMESPACE,
   name='nus-jira-app',
   image='pvermeyden/nodejs-hello-world:a1e8cf1edcc04e6d905078aed9861807f6da0da4',
   containerPort=80,
   targetPort=80,
   port=8089,
+  replicas=1,
 ) +
 [
   continuousdr.basic_read_access_role(NAMESPACE, USERS),
-]
+];
+
+std.trace('' + std.toString(v), v)

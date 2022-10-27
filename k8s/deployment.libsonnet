@@ -7,7 +7,7 @@
     namespace='default',
     image='',
     appName='',
-    replicas=3,
+    replicas=1,
     containerPort=80,
   )::
     local nameLocal = if name == '' then appName + '-deployment' else name;
