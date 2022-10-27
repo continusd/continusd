@@ -16,7 +16,7 @@ continuousda.app(
   image='pvermeyden/nodejs-hello-world:a1e8cf1edcc04e6d905078aed9861807f6da0da4',
   containerPort=80,
   targetPort=80,
-  port=8088,
+  port=8089,
 ) +
 [
   continuousdr.basic_read_access_role(NAMESPACE, USERS),
