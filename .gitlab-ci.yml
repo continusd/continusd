@@ -43,7 +43,7 @@ deploy-app:
 
     # This will deploy into k8s cluster via Tekton Pipeline
     - echo "--- Deloy nusfriends to k8s via Tekton Pipeline"
-    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update nusfriends-1.jsonnet
+    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update nusfriends1.jsonnet
     
     # Display logs from Tekton Pipeline
     - echo "--- Show Tekton PipelineRun logs"
