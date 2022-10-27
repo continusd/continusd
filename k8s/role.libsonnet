@@ -4,10 +4,8 @@
 {
   role(
     name='',
-    namespace='default',
-    apiGroups=[],
-    resources=[],
-    verbs=[],
+    namespace='',
+    rules=[],
   )::
     {
       apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -16,13 +14,7 @@
         name: name,
         namespace: namespace,
       },
-      rules: [
-        {
-          apiGroups: apiGroups,
-          resources: resources,
-          verbs: verbs,
-        },
-      ],
+      rules: rules,
     },
   rolebinding(
     name='',
