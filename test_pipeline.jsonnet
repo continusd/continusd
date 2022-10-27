@@ -61,27 +61,27 @@ local gitlab_secret_name = 'gitlab-creds';
           v.volume_mount(name=gitlab_secret_name, mountPath='/etc/gitlab-creds', readOnly=true),
         ],
       ),
-      t.step(
-        name='check-has-changed-non-namespaces-directories',
-        image='alpine/git:2.36.2',
-        script=|||
-          #!/bin/sh
-          cd /git/infrastructure
-          echo "Files changed:"
-          git diff --name-status $CI_COMMIT_SHA..master # show changed files
-          git diff --name-status $CI_COMMIT_SHA..master | grep -v namespaces/ | grep namespaces/
-          # This script will exit with non-zero exit code if files changed contains namespaces
-        |||,
-        env=[
-          {
-            name: 'CI_COMMIT_SHA',
-            value: std.extVar('CI_COMMIT_SHA'),
-          },
-        ],
-        volumeMounts=[
-          v.volume_mount(name=tmp_vol, mountPath='/git'),
-        ],
-      ),
+      //t.step(
+      //  name='check-has-changed-non-namespaces-directories',
+      //  image='alpine/git:2.36.2',
+      //  script=|||
+      //    #!/bin/sh
+      //    cd /git/infrastructure
+      //    echo "Files changed:"
+      //    git diff --name-status $CI_COMMIT_SHA..master # show changed files
+      //    git diff --name-status $CI_COMMIT_SHA..master | grep -v namespaces/ | grep namespaces/
+      //    # This script will exit with non-zero exit code if files changed contains namespaces
+      //  |||,
+      //  env=[
+      //    {
+      //      name: 'CI_COMMIT_SHA',
+      //      value: std.extVar('CI_COMMIT_SHA'),
+      //    },
+      //  ],
+      //  volumeMounts=[
+      //    v.volume_mount(name=tmp_vol, mountPath='/git'),
+      //  ],
+      //),
       t.step(
         name='list-repo-contents',
         image='alpine',
