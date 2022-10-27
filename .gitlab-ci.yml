@@ -43,8 +43,8 @@ deploy-app:
 
     # This will deploy into k8s cluster via Tekton Pipeline
     - echo "--- Deloy nusfriends to k8s via Tekton Pipeline"
-    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update test_service.jsonnet
-
+    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update nusfriends-1.jsonnet
+    
     # Display logs from Tekton Pipeline
     - echo "--- Show Tekton PipelineRun logs"
     - kubectl logs -n nusfriends-1 --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA -f --all-containers --max-log-requests=8 --pod-running-timeout=45s --previous=false --ignore-errors=true
