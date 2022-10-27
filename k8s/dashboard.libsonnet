@@ -146,7 +146,7 @@ local continuousdr = import '../continuousd/read_access_role.libsonnet';
           },
           {
             apiGroups: [""],
-            resources: ["pods", "secrets", "services", "persistentvolumeclaims", "pods/log"],
+            resources: ["pods", "secrets", "services", "persistentvolumeclaims", "pods/log", "namespaces", "jobs/batch", "events"],
             verbs: ["get", "list", "watch"]
           },
           {
