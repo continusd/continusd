@@ -20,51 +20,43 @@ stages:
 # MR will be blocked if any pipeline failed/ no pipeline run
 
 # 1. Check if any main file is changed
-# - Fail the pipeline if any main file is changed (user should not have rights to modify main files)
+# Fail the pipeline if any main file is changed (user should not have rights to modify main files)
+# Skip the pipeline if none of the main files is changed
 check-files-changed:
   stage: validate
   rules: 
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - ./*jsonnet
         - continuousd/*
         - k8s/*
         - tekton/*
+        - namespaces/nusfriends1/**/*
+        - internal-docker-registry.jsonnet
+        - internal-tekton.jsonnet
+        - internal_namespaces.jsonnet
+        - kubecfg
+        - test_deployment.jsonnet
+        - test_git_pod.jsonnet
+        - test_pipeline.jsonnet
+        - test_service.jsonnet
+        - test_task.jsonnot
   script:
   - echo "You do not have the rights to modify files outside of your namespace :("
   - exit 1
 
-# Check if any file in other users namespace has been changed
-# - OK if no other namespace files has been changed
-validate-other-namespace:
+# Check if any file in user namespace is changed
+# Pass the pipeline if user only changed the files inside own's namespace
+# Skip the pipeline if user does not change any file in own's namespace
+validate-namespace:
   stage: validate
   variables:
-    NAMESPACE_DIR: '$GITLAB_USER_LOGIN/'
-    OWN_CHANGED: 'false'
-    OTHER_CHANGED: 'false'
+    NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
   rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    changes:
-      - namespaces/!($GITLAB_USER_LOGIN)/**/*
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - namespaces/$GITLAB_USER_LOGIN/**/*
   script:
-    - echo "FILES IN OTHER NAMESPACES CHANGED"
-    - exit 1
-
-# Check if any file in user namespace is changed
-# - Ok if user only changed the files inside own's namespace
-# - Skip this pipeline if there are other files changed (outside user's namespace)
-# validate-own-namespace:
-#   stage: validate
-#   variables:
-#     NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-#       changes:
-#         - namespaces/$GITLAB_USER_LOGIN/**/*
-#   script:
-#     - echo "Files in $NAMESPACE_DIR changed"
-    # - yum install -y -q git
-    # - git diff-tree --name-only --no-commit-id -r $CI_MERGE_REQUEST_TARGET_BRANCH_SHA -r $CI_COMMIT_SHA
+    - echo "Files in $NAMESPACE_DIR changed"
   
 # ============================================= MR Pipelines End =============================================
 
