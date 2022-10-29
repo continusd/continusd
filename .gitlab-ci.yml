@@ -82,3 +82,8 @@ deploy-app:
     # Hardcoded show external IP 
     - echo "--- Your App is Running on IP ADDRESS..."
     - kubectl get services -n nusfriends-1 nus-jira-app-service --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+    # Dashboard instructions
+    - echo "--- Dashboard Details"
+    - echo "Local dashboard URL @ http://localhost:8001/api/v1/namespaces/nusfriends-1/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=nusfriends-1"
+    - echo "Dashboard Q&A @ https://continuousd.atlassian.net/wiki/spaces/CONTINUOUS/pages/3735553/User+Guide+v0.0#Dashboard-for-your-deployment"
