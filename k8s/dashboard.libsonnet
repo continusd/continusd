@@ -50,10 +50,13 @@ local continuousdr = import '../continuousd/read_access_role.libsonnet';
         spec: {
           ports: [
             {
+              protocol: "TCP",
               port: 443,
-              targetPort: 8443
+              targetPort: 8443,
             },
           ],
+          externalTrafficPolicy: "Cluster",
+          type: "NodePort",
           selector: {
             "k8s-app": "kubernetes-dashboard"
           },
