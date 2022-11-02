@@ -1,20 +1,67 @@
 image: registry.gitlab.com/jonashackt/aws-kubectl-tkn:0.21.0
 
-before_script:
-  - mkdir ~/.kube
-  - echo "$EKSKUBECONFIG" > ~/.kube/config
-  - echo "--- Testdrive connection to cluster"
-  - kubectl cluster-info
-  - kubectl get nodes
-  - echo "--- Test if Tekton pipelines are set up"
-  - kubectl get pods --namespace tekton-pipelines
-  - echo "--- Change permission for kubecfg"
-  - chmod +x kubecfg
+.before_script_template:
+  before_script:
+    - mkdir ~/.kube
+    - echo "$EKSKUBECONFIG" > ~/.kube/config
+    - echo "--- Testdrive connection to cluster"
+    - kubectl cluster-info
+    - kubectl get nodes
+    - echo "--- Test if Tekton pipelines are set up"
+    - kubectl get pods --namespace tekton-pipelines
+    - echo "--- Change permission for kubecfg"
+    - chmod +x kubecfg
 
 stages:
+  - validate
   - deploy
 
-build-image:
+# ============================================ MR Pipelines Start ============================================
+# MR will be blocked if any pipeline failed/ no pipeline run
+
+# 1. Check if any main file is changed
+# Fail the pipeline if any main file is changed (user should not have rights to modify main files)
+# Skip the pipeline if none of the main files is changed
+check-files-changed:
+  stage: validate
+  rules: 
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - continuousd/*
+        - k8s/*
+        - tekton/*
+        - namespaces/nusfriends1/**/*
+        - internal-docker-registry.jsonnet
+        - internal-tekton.jsonnet
+        - internal_namespaces.jsonnet
+        - kubecfg
+        - test_deployment.jsonnet
+        - test_git_pod.jsonnet
+        - test_pipeline.jsonnet
+        - test_service.jsonnet
+        - test_task.jsonnot
+  script:
+  - echo "You do not have the rights to modify files outside of your namespace :("
+  - exit 1
+
+# Check if any file in user namespace is changed
+# Pass the pipeline if user only changed the files inside own's namespace
+# Skip the pipeline if user does not change any file in own's namespace
+validate-namespace:
+  stage: validate
+  variables:
+    NAMESPACE_DIR: 'namespaces/$GITLAB_USER_LOGIN'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - namespaces/$GITLAB_USER_LOGIN/**/*
+  script:
+    - echo "Files in $NAMESPACE_DIR changed"
+  
+# ============================================= MR Pipelines End =============================================
+
+deploy-app:
+  extends: .before_script_template
   stage: deploy
   rules:
     # Only run pipeline if the code is committed/ merged into the master branch 
@@ -26,13 +73,17 @@ build-image:
 
     # This will deploy into k8s cluster via Tekton Pipeline
     - echo "--- Deloy nusfriends to k8s via Tekton Pipeline"
-    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update test_pipeline.jsonnet
-
+    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update nusfriends1.jsonnet
+    
     # Display logs from Tekton Pipeline
-    # in nusfriends-1 namespace
     - echo "--- Show Tekton PipelineRun logs"
     - kubectl logs -n nusfriends-1 --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA -f --all-containers --max-log-requests=8 --pod-running-timeout=45s --previous=false --ignore-errors=true
 
     # Hardcoded show external IP 
     - echo "--- Your App is Running on IP ADDRESS..."
     - kubectl get services -n nusfriends-1 nus-jira-app-service --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+    # Dashboard instructions
+    - echo "--- Dashboard Details"
+    - echo "Local dashboard URL @ http://localhost:8001/api/v1/namespaces/nusfriends-1/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=nusfriends-1"
+    - echo "Dashboard Q&A @ https://continuousd.atlassian.net/wiki/spaces/CONTINUOUS/pages/3735553/User+Guide+v0.0#Dashboard-for-your-deployment"
