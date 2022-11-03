@@ -55,3 +55,7 @@ kubecfg proxy
 # Run this common to get your token
 kubectl -n nusfriends-1 create token kubernetes-dashboard
 ```
+
+# Sample programs
+For sample programs, check out `example/` that provides some sample `jsonnet` for immediate onboarding.
+
