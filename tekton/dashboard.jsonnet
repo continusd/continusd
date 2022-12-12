@@ -1,3 +1,4 @@
+// Generated from https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml on 12/12/2022
 [
   {
     apiVersion: 'apiextensions.k8s.io/v1',
@@ -392,7 +393,7 @@
   {
     apiVersion: 'v1',
     data: {
-      version: 'v0.29.2',
+      version: 'v0.30.0',
     },
     kind: 'ConfigMap',
     metadata: {
@@ -414,9 +415,9 @@
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/name': 'dashboard',
         'app.kubernetes.io/part-of': 'tekton-dashboard',
-        'app.kubernetes.io/version': 'v0.29.2',
-        'dashboard.tekton.dev/release': 'v0.29.2',
-        version: 'v0.29.2',
+        'app.kubernetes.io/version': 'v0.30.0',
+        'dashboard.tekton.dev/release': 'v0.30.0',
+        version: 'v0.30.0',
       },
       name: 'tekton-dashboard',
       namespace: 'tekton-pipelines',
@@ -448,9 +449,9 @@
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/name': 'dashboard',
         'app.kubernetes.io/part-of': 'tekton-dashboard',
-        'app.kubernetes.io/version': 'v0.29.2',
-        'dashboard.tekton.dev/release': 'v0.29.2',
-        version: 'v0.29.2',
+        'app.kubernetes.io/version': 'v0.30.0',
+        'dashboard.tekton.dev/release': 'v0.30.0',
+        version: 'v0.30.0',
       },
       name: 'tekton-dashboard',
       namespace: 'tekton-pipelines',
@@ -473,7 +474,7 @@
             'app.kubernetes.io/instance': 'default',
             'app.kubernetes.io/name': 'dashboard',
             'app.kubernetes.io/part-of': 'tekton-dashboard',
-            'app.kubernetes.io/version': 'v0.29.2',
+            'app.kubernetes.io/version': 'v0.30.0',
           },
           name: 'tekton-dashboard',
         },
@@ -502,7 +503,7 @@
                   },
                 },
               ],
-              image: 'gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.29.2@sha256:67425f5fa32c591578ba6c8b6d4d6a135f8ca195745e023f3f311e3f1ee6ea37',
+              image: 'gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.30.0@sha256:85f7d38086fadb07556052ce873d44861c29ef690f47735f32d7e6a153ca8a92',
               livenessProbe: {
                 httpGet: {
                   path: '/health',
@@ -521,14 +522,24 @@
                   port: 9097,
                 },
               },
+              securityContext: {
+                allowPrivilegeEscalation: false,
+                capabilities: {
+                  drop: [
+                    'ALL',
+                  ],
+                },
+                runAsGroup: 65532,
+                runAsNonRoot: true,
+                runAsUser: 65532,
+                seccompProfile: {
+                  type: 'RuntimeDefault',
+                },
+              },
             },
           ],
           nodeSelector: {
             'kubernetes.io/os': 'linux',
-          },
-          securityContext: {
-            runAsNonRoot: true,
-            runAsUser: 65532,
           },
           serviceAccountName: 'tekton-dashboard',
           volumes: [],
