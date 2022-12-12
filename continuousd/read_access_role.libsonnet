@@ -16,10 +16,10 @@ local r = import '../k8s/role.libsonnet';
         namespace=namespace,
         rules=[
           {
-            'apiGroups':['', 'apps'],
-            'resources':['*'],
-            'verbs':['get', 'list']
-            }
+            apiGroups: ['', 'apps'],
+            resources: ['*'],
+            verbs: ['get', 'list'],
+          },
         ],
       ),
       [
@@ -45,9 +45,13 @@ local r = import '../k8s/role.libsonnet';
       r.role(
         namespace=namespace,
         name=role_name,
-        apiGroups=['', '*'],
-        resources=['*'],
-        verbs=['*'],
+        rules=[
+          {
+            apiGroups: ['', '*'],
+            resources: ['*'],
+            verbs: ['*'],
+          },
+        ],
       ),
       [
         r.rolebinding(
