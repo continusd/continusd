@@ -37,31 +37,31 @@ local a = import './serviceaccount.libsonnet';
           namespace: namespace,
         },
       },
-      {
-        kind: 'Service',
-        apiVersion: 'v1',
-        metadata: {
-          labels: {
-            'k8s-app': 'kubernetes-dashboard',
-          },
-          name: 'kubernetes-dashboard',
-          namespace: namespace,
-        },
-        spec: {
-          ports: [
-            {
-              protocol: 'TCP',
-              port: 443,
-              targetPort: 8443,
-            },
-          ],
-          externalTrafficPolicy: 'Cluster',
-          type: 'NodePort',
-          selector: {
-            'k8s-app': 'kubernetes-dashboard',
-          },
-        },
-      },
+      //{
+      //  kind: 'Service',
+      //  apiVersion: 'v1',
+      //  metadata: {
+      //    labels: {
+      //      'k8s-app': 'kubernetes-dashboard',
+      //    },
+      //    name: 'kubernetes-dashboard',
+      //    namespace: namespace,
+      //  },
+      //  spec: {
+      //    ports: [
+      //      {
+      //        protocol: 'TCP',
+      //        port: 443,
+      //        targetPort: 8443,
+      //      },
+      //    ],
+      //    externalTrafficPolicy: 'Cluster',
+      //    type: 'NodePort',
+      //    selector: {
+      //      'k8s-app': 'kubernetes-dashboard',
+      //    },
+      //  },
+      //},
       {
         apiVersion: 'v1',
         kind: 'Secret',
@@ -262,7 +262,11 @@ local a = import './serviceaccount.libsonnet';
                       },
                     ],
                     args: [
-                      '--auto-generate-certificates',
+                      '--enable-skip-login',
+                      '--disable-settings-authorizer',
+                      '--enable-insecure-login',
+                      '--insecure-bind-address=0.0.0.0',
+                      //'--auto-generate-certificates',
                       '--namespace=' + namespace,
                     ],
                     volumeMounts: [
