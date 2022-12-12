@@ -281,7 +281,7 @@ local a = import './serviceaccount.libsonnet';
                     ],
                     livenessProbe: {
                       httpGet: {
-                        scheme: 'HTTPS',
+                        scheme: 'HTTP',
                         path: '/',
                         port: 8443,
                       },
