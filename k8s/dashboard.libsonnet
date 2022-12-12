@@ -257,7 +257,7 @@ local a = import './serviceaccount.libsonnet';
                     imagePullPolicy: 'Always',
                     ports: [
                       {
-                        containerPort: 8443,
+                        containerPort: 9090,
                         protocol: 'TCP',
                       },
                     ],
@@ -283,7 +283,7 @@ local a = import './serviceaccount.libsonnet';
                       httpGet: {
                         scheme: 'HTTP',
                         path: '/',
-                        port: 8443,
+                        port: 9090,
                       },
                       initialDelaySeconds: 30,
                       timeoutSeconds: 30,
