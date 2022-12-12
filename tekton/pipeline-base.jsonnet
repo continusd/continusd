@@ -1,4 +1,4 @@
-// Converted from https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml on 29/09/2022
+// Converted from https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml on 12/12/2022
 
 [
   {
@@ -9,71 +9,7 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-      },
-    },
-  },
-  {
-    apiVersion: 'policy/v1beta1',
-    kind: 'PodSecurityPolicy',
-    metadata: {
-      name: 'tekton-pipelines',
-      labels: {
-        'app.kubernetes.io/instance': 'default',
-        'app.kubernetes.io/part-of': 'tekton-pipelines',
-      },
-      annotations: {
-        'seccomp.security.alpha.kubernetes.io/allowedProfileNames': 'docker/default,runtime/default',
-        'seccomp.security.alpha.kubernetes.io/defaultProfileName': 'runtime/default',
-        'apparmor.security.beta.kubernetes.io/allowedProfileNames': 'runtime/default',
-        'apparmor.security.beta.kubernetes.io/defaultProfileName': 'runtime/default',
-      },
-    },
-    spec: {
-      privileged: false,
-      allowPrivilegeEscalation: false,
-      requiredDropCapabilities: [
-        'ALL',
-      ],
-      volumes: [
-        'emptyDir',
-        'configMap',
-        'secret',
-      ],
-      hostNetwork: false,
-      hostIPC: false,
-      hostPID: false,
-      runAsUser: {
-        rule: 'MustRunAsNonRoot',
-      },
-      runAsGroup: {
-        rule: 'MustRunAs',
-        ranges: [
-          {
-            min: 1,
-            max: 65535,
-          },
-        ],
-      },
-      seLinux: {
-        rule: 'RunAsAny',
-      },
-      supplementalGroups: {
-        rule: 'MustRunAs',
-        ranges: [
-          {
-            min: 1,
-            max: 65535,
-          },
-        ],
-      },
-      fsGroup: {
-        rule: 'MustRunAs',
-        ranges: [
-          {
-            min: 1,
-            max: 65535,
-          },
-        ],
+        'pod-security.kubernetes.io/enforce': 'restricted',
       },
     },
   },
@@ -112,8 +48,8 @@
           'pipelines',
           'pipelineruns',
           'pipelineresources',
-          'conditions',
           'runs',
+          'customruns',
         ],
         verbs: [
           'get',
@@ -133,6 +69,7 @@
           'taskruns/finalizers',
           'pipelineruns/finalizers',
           'runs/finalizers',
+          'customruns/finalizers',
         ],
         verbs: [
           'get',
@@ -156,6 +93,7 @@
           'pipelineruns/status',
           'pipelineresources/status',
           'runs/status',
+          'customruns/status',
         ],
         verbs: [
           'get',
@@ -298,8 +236,8 @@
           'clustertasks.tekton.dev',
           'taskruns.tekton.dev',
           'pipelineresources.tekton.dev',
-          'conditions.tekton.dev',
           'resolutionrequests.resolution.tekton.dev',
+          'customruns.tekton.dev',
         ],
       },
       {
@@ -358,20 +296,6 @@
           'get',
           'update',
           'delete',
-        ],
-      },
-      {
-        apiGroups: [
-          'policy',
-        ],
-        resources: [
-          'podsecuritypolicies',
-        ],
-        resourceNames: [
-          'tekton-pipelines',
-        ],
-        verbs: [
-          'use',
         ],
       },
       {
@@ -449,20 +373,6 @@
           'config-registry-cert',
         ],
       },
-      {
-        apiGroups: [
-          'policy',
-        ],
-        resources: [
-          'podsecuritypolicies',
-        ],
-        resourceNames: [
-          'tekton-pipelines',
-        ],
-        verbs: [
-          'use',
-        ],
-      },
     ],
   },
   {
@@ -532,20 +442,6 @@
         ],
         resourceNames: [
           'webhook-certs',
-        ],
-      },
-      {
-        apiGroups: [
-          'policy',
-        ],
-        resources: [
-          'podsecuritypolicies',
-        ],
-        resourceNames: [
-          'tekton-pipelines',
-        ],
-        verbs: [
-          'use',
         ],
       },
     ],
@@ -839,8 +735,8 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -892,12 +788,77 @@
     apiVersion: 'apiextensions.k8s.io/v1',
     kind: 'CustomResourceDefinition',
     metadata: {
+      name: 'customruns.tekton.dev',
+      labels: {
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
+      },
+    },
+    spec: {
+      group: 'tekton.dev',
+      preserveUnknownFields: false,
+      versions: [
+        {
+          name: 'v1beta1',
+          served: true,
+          storage: true,
+          schema: {
+            openAPIV3Schema: {
+              type: 'object',
+              'x-kubernetes-preserve-unknown-fields': true,
+            },
+          },
+          additionalPrinterColumns: [
+            {
+              name: 'Succeeded',
+              type: 'string',
+              jsonPath: '.status.conditions[?(@.type=="Succeeded")].status',
+            },
+            {
+              name: 'Reason',
+              type: 'string',
+              jsonPath: '.status.conditions[?(@.type=="Succeeded")].reason',
+            },
+            {
+              name: 'StartTime',
+              type: 'date',
+              jsonPath: '.status.startTime',
+            },
+            {
+              name: 'CompletionTime',
+              type: 'date',
+              jsonPath: '.status.completionTime',
+            },
+          ],
+          subresources: {
+            status: {},
+          },
+        },
+      ],
+      names: {
+        kind: 'CustomRun',
+        plural: 'customruns',
+        singular: 'customrun',
+        categories: [
+          'tekton',
+          'tekton-pipelines',
+        ],
+      },
+      scope: 'Namespaced',
+    },
+  },
+  {
+    apiVersion: 'apiextensions.k8s.io/v1',
+    kind: 'CustomResourceDefinition',
+    metadata: {
       name: 'pipelines.tekton.dev',
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -968,8 +929,8 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -1068,6 +1029,7 @@
         webhook: {
           conversionReviewVersions: [
             'v1beta1',
+            'v1',
           ],
           clientConfig: {
             service: {
@@ -1108,7 +1070,8 @@
         {
           name: 'v1alpha1',
           served: true,
-          storage: true,
+          deprecated: true,
+          storage: false,
           subresources: {
             status: {},
           },
@@ -1133,8 +1096,8 @@
         },
         {
           name: 'v1beta1',
-          served: false,
-          storage: false,
+          served: true,
+          storage: true,
           subresources: {
             status: {},
           },
@@ -1146,6 +1109,16 @@
           },
           additionalPrinterColumns: [
             {
+              name: 'OwnerKind',
+              type: 'string',
+              jsonPath: '.metadata.ownerReferences[0].kind',
+            },
+            {
+              name: 'Owner',
+              type: 'string',
+              jsonPath: '.metadata.ownerReferences[0].name',
+            },
+            {
               name: 'Succeeded',
               type: 'string',
               jsonPath: ".status.conditions[?(@.type=='Succeeded')].status",
@@ -1155,9 +1128,34 @@
               type: 'string',
               jsonPath: ".status.conditions[?(@.type=='Succeeded')].reason",
             },
+            {
+              name: 'StartTime',
+              type: 'string',
+              jsonPath: '.metadata.creationTimestamp',
+            },
+            {
+              name: 'EndTime',
+              type: 'string',
+              jsonPath: ".status.conditions[?(@.type=='Succeeded')].lastTransitionTime",
+            },
           ],
         },
       ],
+      conversion: {
+        strategy: 'Webhook',
+        webhook: {
+          conversionReviewVersions: [
+            'v1alpha1',
+            'v1beta1',
+          ],
+          clientConfig: {
+            service: {
+              name: 'tekton-pipelines-webhook',
+              namespace: 'tekton-pipelines',
+            },
+          },
+        },
+      },
     },
   },
   {
@@ -1168,8 +1166,8 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -1210,8 +1208,8 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -1275,8 +1273,8 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -1347,8 +1345,8 @@
       labels: {
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -1469,7 +1467,7 @@
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
       },
     },
   },
@@ -1482,7 +1480,7 @@
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
       },
     },
     webhooks: [
@@ -1511,7 +1509,7 @@
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
       },
     },
     webhooks: [
@@ -1540,7 +1538,7 @@
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
       },
     },
     webhooks: [
@@ -1588,7 +1586,8 @@
           'pipelines',
           'pipelineruns',
           'pipelineresources',
-          'conditions',
+          'runs',
+          'customruns',
         ],
         verbs: [
           'create',
@@ -1625,7 +1624,8 @@
           'pipelines',
           'pipelineruns',
           'pipelineresources',
-          'conditions',
+          'runs',
+          'customruns',
         ],
         verbs: [
           'get',
@@ -1695,6 +1695,8 @@
       'enable-custom-tasks': 'false',
       'enable-api-fields': 'stable',
       'send-cloudevents-for-runs': 'false',
+      'resource-verification-mode': 'skip',
+      'enable-provenance-in-status': 'false',
     },
   },
   {
@@ -1709,7 +1711,7 @@
       },
     },
     data: {
-      version: 'v0.40.1',
+      version: 'v0.42.0',
     },
   },
   {
@@ -1772,6 +1774,21 @@
     },
   },
   {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'config-trusted-resources',
+      namespace: 'tekton-pipelines',
+      labels: {
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      _example: '################################\n#                              #\n#    EXAMPLE CONFIGURATION     #\n#                              #\n################################\n# This block is not actually functional configuration,\n# but serves to illustrate the available configuration\n# options and document them in a way that is accessible\n# to users that `kubectl edit` this config map.\n#\n# These sample configuration options may be copied out of\n# this example block and unindented to be in the data block\n# to actually change the configuration.\n\n# publickeys specifies the list of public keys, the paths are separated by comma\n# publickeys: "/etc/verification-secrets/cosign.pub,\n# gcpkms://projects/tekton/locations/us/keyRings/trusted-resources/cryptoKeys/trusted-resources"\n',
+    },
+  },
+  {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
@@ -1781,10 +1798,10 @@
         'app.kubernetes.io/name': 'controller',
         'app.kubernetes.io/component': 'controller',
         'app.kubernetes.io/instance': 'default',
-        'app.kubernetes.io/version': 'v0.40.1',
+        'app.kubernetes.io/version': 'v0.42.0',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -1803,11 +1820,11 @@
             'app.kubernetes.io/name': 'controller',
             'app.kubernetes.io/component': 'controller',
             'app.kubernetes.io/instance': 'default',
-            'app.kubernetes.io/version': 'v0.40.1',
+            'app.kubernetes.io/version': 'v0.42.0',
             'app.kubernetes.io/part-of': 'tekton-pipelines',
-            'pipeline.tekton.dev/release': 'v0.40.1',
+            'pipeline.tekton.dev/release': 'v0.42.0',
             app: 'tekton-pipelines-controller',
-            version: 'v0.40.1',
+            version: 'v0.42.0',
           },
         },
         spec: {
@@ -1834,26 +1851,26 @@
           containers: [
             {
               name: 'tekton-pipelines-controller',
-              image: 'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.40.1@sha256:02aef94088e2f5487b224c6a9d380cac7fa72e8fec883c9e2833569f302cb53c',
+              image: 'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.42.0@sha256:1fa50403c071b768984e23e26d0e68d2f7e470284ef2eb73581ec556bacdad95',
               args: [
                 '-kubeconfig-writer-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/kubeconfigwriter:v0.40.1@sha256:6fbdec9b659be2a895edec1675fdc073217f4e1823e1baf1365fe60a671e7d84',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/kubeconfigwriter:v0.42.0@sha256:672df16c97c15d20102749c6e86195683d037bd6c8787560c9c07ade8b610071',
                 '-git-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.40.1@sha256:6e875f2d66eb4cf9faceb06b60d840185a4fc71b9b16cf31f977c9c1b21abc28',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.42.0@sha256:211b0822659b2030a9e12b1cdb47faab2187a63a24ed9d21044520f967674138',
                 '-entrypoint-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.40.1@sha256:4ef4d1ec86858cf370e8189fb9d6f7cfc32381b8f5d53cb42fd32fd8dd986637',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.42.0@sha256:77e43d0fc9f7e7bdfa31dc16082b08dace05ce81c91a06c00dfa2f547212ce72',
                 '-nop-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/nop:v0.40.1@sha256:f9668bd0aa7beebd115e5e29c8e19a677db3fb9ffeeb4e6681eace0d0b5a4759',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/nop:v0.42.0@sha256:bd1fcc45d40a8ef1621789856caa2f54d7a884f19af921105feafae0131648c5',
                 '-imagedigest-exporter-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/imagedigestexporter:v0.40.1@sha256:8ca77ef46e9ee2aab42badaf1553e05cd4ad2f2126b42ede422efb62be5ec763',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/imagedigestexporter:v0.42.0@sha256:370d5a0e39577f784f1376fac0822230b9a44950c01fe2190692a0a5a810adc6',
                 '-pr-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/pullrequest-init:v0.40.1@sha256:840b5e181ec1c82af2bcf5da88840ca4af115f84c3cea5e0cc8877ccd75446ac',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/pullrequest-init:v0.42.0@sha256:e00d578d40d57a5124bee5107cb3358763874588a7fe2522ebc7bb979280d06e',
                 '-workingdirinit-image',
-                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/workingdirinit:v0.40.1@sha256:5746168c372d146837a1822c128515ba73a7cf5b9e3764dd6897c00eedcc8956',
+                'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/workingdirinit:v0.42.0@sha256:60a39c629448ac2845c4781513ef44c2f2fbcb6eb321d70a016002b5fa7b2379',
                 '-gsutil-image',
                 'gcr.io/google.com/cloudsdktool/cloud-sdk@sha256:27b2c22bf259d9bc1a291e99c63791ba0c27a04d2db0a43241ba0f1f20f4067f',
                 '-shell-image',
-                'distroless.dev/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791',
+                'cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791',
                 '-shell-image-win',
                 'mcr.microsoft.com/powershell:nanoserver@sha256:b6d5ff841b78bdf2dfed7550000fd4f3437385b8fa686ec0f010be24777654d6',
               ],
@@ -1865,6 +1882,11 @@
                 {
                   name: 'config-registry-cert',
                   mountPath: '/etc/config-registry-cert',
+                },
+                {
+                  name: 'verification-secrets',
+                  mountPath: '/etc/verification-secrets',
+                  readOnly: true,
                 },
               ],
               env: [
@@ -1905,6 +1927,10 @@
                   value: 'config-leader-election',
                 },
                 {
+                  name: 'CONFIG_TRUSTED_RESOURCES_NAME',
+                  value: 'config-trusted-resources',
+                },
+                {
                   name: 'SSL_CERT_FILE',
                   value: '/etc/config-registry-cert/cert',
                 },
@@ -1921,11 +1947,15 @@
                 allowPrivilegeEscalation: false,
                 capabilities: {
                   drop: [
-                    'all',
+                    'ALL',
                   ],
                 },
                 runAsUser: 65532,
                 runAsGroup: 65532,
+                runAsNonRoot: true,
+                seccompProfile: {
+                  type: 'RuntimeDefault',
+                },
               },
               ports: [
                 {
@@ -1976,6 +2006,13 @@
                 name: 'config-registry-cert',
               },
             },
+            {
+              name: 'verification-secrets',
+              secret: {
+                secretName: 'verification-secrets',
+                optional: true,
+              },
+            },
           ],
         },
       },
@@ -1989,11 +2026,11 @@
         'app.kubernetes.io/name': 'controller',
         'app.kubernetes.io/component': 'controller',
         'app.kubernetes.io/instance': 'default',
-        'app.kubernetes.io/version': 'v0.40.1',
+        'app.kubernetes.io/version': 'v0.42.0',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
         app: 'tekton-pipelines-controller',
-        version: 'v0.40.1',
+        version: 'v0.42.0',
       },
       name: 'tekton-pipelines-controller',
       namespace: 'tekton-pipelines',
@@ -2024,23 +2061,470 @@
       },
     },
   },
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
   {
-    apiVersion: 'autoscaling/v2beta1',
+    apiVersion: 'v1',
+    kind: 'Namespace',
+    metadata: {
+      name: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+        'pod-security.kubernetes.io/enforce': 'restricted',
+      },
+    },
+  },
+  {
+    kind: 'ClusterRole',
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    metadata: {
+      name: 'tekton-pipelines-resolvers-resolution-request-updates',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    rules: [
+      {
+        apiGroups: [
+          'resolution.tekton.dev',
+        ],
+        resources: [
+          'resolutionrequests',
+          'resolutionrequests/status',
+        ],
+        verbs: [
+          'get',
+          'list',
+          'watch',
+          'update',
+          'patch',
+        ],
+      },
+      {
+        apiGroups: [
+          'tekton.dev',
+        ],
+        resources: [
+          'tasks',
+          'pipelines',
+        ],
+        verbs: [
+          'get',
+          'list',
+        ],
+      },
+      {
+        apiGroups: [
+          '',
+        ],
+        resources: [
+          'secrets',
+        ],
+        verbs: [
+          'get',
+          'list',
+          'watch',
+        ],
+      },
+    ],
+  },
+  {
+    kind: 'Role',
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    metadata: {
+      name: 'tekton-pipelines-resolvers-namespace-rbac',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    rules: [
+      {
+        apiGroups: [
+          '',
+        ],
+        resources: [
+          'configmaps',
+          'secrets',
+        ],
+        verbs: [
+          'get',
+          'list',
+          'update',
+          'watch',
+        ],
+      },
+      {
+        apiGroups: [
+          'coordination.k8s.io',
+        ],
+        resources: [
+          'leases',
+        ],
+        verbs: [
+          'get',
+          'list',
+          'create',
+          'update',
+          'delete',
+          'patch',
+          'watch',
+        ],
+      },
+    ],
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ServiceAccount',
+    metadata: {
+      name: 'tekton-pipelines-resolvers',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+  },
+  {
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    kind: 'ClusterRoleBinding',
+    metadata: {
+      name: 'tekton-pipelines-resolvers',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    subjects: [
+      {
+        kind: 'ServiceAccount',
+        name: 'tekton-pipelines-resolvers',
+        namespace: 'tekton-pipelines-resolvers',
+      },
+    ],
+    roleRef: {
+      kind: 'ClusterRole',
+      name: 'tekton-pipelines-resolvers-resolution-request-updates',
+      apiGroup: 'rbac.authorization.k8s.io',
+    },
+  },
+  {
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    kind: 'RoleBinding',
+    metadata: {
+      name: 'tekton-pipelines-resolvers-namespace-rbac',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    subjects: [
+      {
+        kind: 'ServiceAccount',
+        name: 'tekton-pipelines-resolvers',
+        namespace: 'tekton-pipelines-resolvers',
+      },
+    ],
+    roleRef: {
+      kind: 'Role',
+      name: 'tekton-pipelines-resolvers-namespace-rbac',
+      apiGroup: 'rbac.authorization.k8s.io',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'bundleresolver-config',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      'default-service-account': 'default',
+      'default-kind': 'task',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'cluster-resolver-config',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      'default-kind': 'task',
+      'default-namespace': '',
+      'allowed-namespaces': '',
+      'blocked-namespaces': '',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'resolvers-feature-flags',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      'enable-bundles-resolver': 'true',
+      'enable-hub-resolver': 'true',
+      'enable-git-resolver': 'true',
+      'enable-cluster-resolver': 'true',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'config-leader-election',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      _example: '################################\n#                              #\n#    EXAMPLE CONFIGURATION     #\n#                              #\n################################\n# This block is not actually functional configuration,\n# but serves to illustrate the available configuration\n# options and document them in a way that is accessible\n# to users that `kubectl edit` this config map.\n#\n# These sample configuration options may be copied out of\n# this example block and unindented to be in the data block\n# to actually change the configuration.\n# lease-duration is how long non-leaders will wait to try to acquire the\n# lock; 15 seconds is the value used by core kubernetes controllers.\nlease-duration: "60s"\n# renew-deadline is how long a leader will try to renew the lease before\n# giving up; 10 seconds is the value used by core kubernetes controllers.\nrenew-deadline: "40s"\n# retry-period is how long the leader election client waits between tries of\n# actions; 2 seconds is the value used by core kubernetes controllers.\nretry-period: "10s"\n# buckets is the number of buckets used to partition key space of each\n# Reconciler. If this number is M and the replica number of the controller\n# is N, the N replicas will compete for the M buckets. The owner of a\n# bucket will take care of the reconciling for the keys partitioned into\n# that bucket.\nbuckets: "1"\n',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'config-logging',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      'zap-logger-config': '{\n  "level": "info",\n  "development": false,\n  "sampling": {\n    "initial": 100,\n    "thereafter": 100\n  },\n  "outputPaths": ["stdout"],\n  "errorOutputPaths": ["stderr"],\n  "encoding": "json",\n  "encoderConfig": {\n    "timeKey": "timestamp",\n    "levelKey": "severity",\n    "nameKey": "logger",\n    "callerKey": "caller",\n    "messageKey": "message",\n    "stacktraceKey": "stacktrace",\n    "lineEnding": "",\n    "levelEncoder": "",\n    "timeEncoder": "iso8601",\n    "durationEncoder": "",\n    "callerEncoder": ""\n  }\n}\n',
+      'loglevel.controller': 'info',
+      'loglevel.webhook': 'info',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'config-observability',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      _example: '################################\n#                              #\n#    EXAMPLE CONFIGURATION     #\n#                              #\n################################\n\n# This block is not actually functional configuration,\n# but serves to illustrate the available configuration\n# options and document them in a way that is accessible\n# to users that `kubectl edit` this config map.\n#\n# These sample configuration options may be copied out of\n# this example block and unindented to be in the data block\n# to actually change the configuration.\n\n# metrics.backend-destination field specifies the system metrics destination.\n# It supports either prometheus (the default) or stackdriver.\n# Note: Using stackdriver will incur additional charges\nmetrics.backend-destination: prometheus\n\n# metrics.request-metrics-backend-destination specifies the request metrics\n# destination. If non-empty, it enables queue proxy to send request metrics.\n# Currently supported values: prometheus, stackdriver.\nmetrics.request-metrics-backend-destination: prometheus\n\n# metrics.stackdriver-project-id field specifies the stackdriver project ID. This\n# field is optional. When running on GCE, application default credentials will be\n# used if this field is not provided.\nmetrics.stackdriver-project-id: "<your stackdriver project id>"\n\n# metrics.allow-stackdriver-custom-metrics indicates whether it is allowed to send metrics to\n# Stackdriver using "global" resource type and custom metric type if the\n# metrics are not supported by "knative_revision" resource type. Setting this\n# flag to "true" could cause extra Stackdriver charge.\n# If metrics.backend-destination is not Stackdriver, this is ignored.\nmetrics.allow-stackdriver-custom-metrics: "false"\n',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'git-resolver-config',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      'fetch-timeout': '1m',
+      'default-url': 'https://github.com/tektoncd/catalog.git',
+      'default-revision': 'main',
+      'scm-type': 'github',
+      'server-url': '',
+      'api-token-secret-name': '',
+      'api-token-secret-key': '',
+      'api-token-secret-namespace': 'default',
+      'default-org': '',
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: {
+      name: 'hubresolver-config',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+      },
+    },
+    data: {
+      'default-tekton-hub-catalog': 'Tekton',
+      'default-artifact-hub-task-catalog': 'tekton-catalog-tasks',
+      'default-artifact-hub-pipeline-catalog': 'tekton-catalog-pipelines',
+      'default-kind': 'task',
+      'default-type': 'artifact',
+    },
+  },
+  {
+    apiVersion: 'apps/v1',
+    kind: 'Deployment',
+    metadata: {
+      name: 'tekton-pipelines-remote-resolvers',
+      namespace: 'tekton-pipelines-resolvers',
+      labels: {
+        'app.kubernetes.io/name': 'resolvers',
+        'app.kubernetes.io/component': 'resolvers',
+        'app.kubernetes.io/instance': 'default',
+        'app.kubernetes.io/version': 'v0.42.0',
+        'app.kubernetes.io/part-of': 'tekton-pipelines',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
+      },
+    },
+    spec: {
+      replicas: 1,
+      selector: {
+        matchLabels: {
+          'app.kubernetes.io/name': 'resolvers',
+          'app.kubernetes.io/component': 'resolvers',
+          'app.kubernetes.io/instance': 'default',
+          'app.kubernetes.io/part-of': 'tekton-pipelines',
+        },
+      },
+      template: {
+        metadata: {
+          labels: {
+            'app.kubernetes.io/name': 'resolvers',
+            'app.kubernetes.io/component': 'resolvers',
+            'app.kubernetes.io/instance': 'default',
+            'app.kubernetes.io/version': 'v0.42.0',
+            'app.kubernetes.io/part-of': 'tekton-pipelines',
+            'pipeline.tekton.dev/release': 'v0.42.0',
+            app: 'tekton-pipelines-resolvers',
+            version: 'v0.42.0',
+          },
+        },
+        spec: {
+          affinity: {
+            podAntiAffinity: {
+              preferredDuringSchedulingIgnoredDuringExecution: [
+                {
+                  podAffinityTerm: {
+                    labelSelector: {
+                      matchLabels: {
+                        'app.kubernetes.io/name': 'resolvers',
+                        'app.kubernetes.io/component': 'resolvers',
+                        'app.kubernetes.io/instance': 'default',
+                        'app.kubernetes.io/part-of': 'tekton-pipelines',
+                      },
+                    },
+                    topologyKey: 'kubernetes.io/hostname',
+                  },
+                  weight: 100,
+                },
+              ],
+            },
+          },
+          serviceAccountName: 'tekton-pipelines-resolvers',
+          containers: [
+            {
+              name: 'controller',
+              image: 'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/resolvers:v0.42.0@sha256:eaa7d21d45f0bc1c411823d6a943e668c820f9cf52f1549d188edb89e992f6e0',
+              resources: {
+                requests: {
+                  cpu: '100m',
+                  memory: '100Mi',
+                },
+                limits: {
+                  cpu: '1000m',
+                  memory: '1000Mi',
+                },
+              },
+              ports: [
+                {
+                  name: 'metrics',
+                  containerPort: 9090,
+                },
+              ],
+              env: [
+                {
+                  name: 'SYSTEM_NAMESPACE',
+                  valueFrom: {
+                    fieldRef: {
+                      fieldPath: 'metadata.namespace',
+                    },
+                  },
+                },
+                {
+                  name: 'CONFIG_LOGGING_NAME',
+                  value: 'config-logging',
+                },
+                {
+                  name: 'CONFIG_OBSERVABILITY_NAME',
+                  value: 'config-observability',
+                },
+                {
+                  name: 'CONFIG_FEATURE_FLAGS_NAME',
+                  value: 'feature-flags',
+                },
+                {
+                  name: 'CONFIG_LEADERELECTION_NAME',
+                  value: 'config-leader-election',
+                },
+                {
+                  name: 'METRICS_DOMAIN',
+                  value: 'tekton.dev/resolution',
+                },
+                {
+                  name: 'ARTIFACT_HUB_API',
+                  value: 'https://artifacthub.io/',
+                },
+              ],
+              securityContext: {
+                allowPrivilegeEscalation: false,
+                readOnlyRootFilesystem: true,
+                runAsNonRoot: true,
+                capabilities: {
+                  drop: [
+                    'ALL',
+                  ],
+                },
+                seccompProfile: {
+                  type: 'RuntimeDefault',
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  {
+    apiVersion: 'autoscaling/v2',
     kind: 'HorizontalPodAutoscaler',
     metadata: {
       name: 'tekton-pipelines-webhook',
@@ -2049,10 +2533,10 @@
         'app.kubernetes.io/name': 'webhook',
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
-        'app.kubernetes.io/version': 'v0.40.1',
+        'app.kubernetes.io/version': 'v0.42.0',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -2068,7 +2552,10 @@
           type: 'Resource',
           resource: {
             name: 'cpu',
-            targetAverageUtilization: 100,
+            target: {
+              type: 'Utilization',
+              averageUtilization: 100,
+            },
           },
         },
       ],
@@ -2084,10 +2571,10 @@
         'app.kubernetes.io/name': 'webhook',
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
-        'app.kubernetes.io/version': 'v0.40.1',
+        'app.kubernetes.io/version': 'v0.42.0',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
-        version: 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
+        version: 'v0.42.0',
       },
     },
     spec: {
@@ -2105,11 +2592,11 @@
             'app.kubernetes.io/name': 'webhook',
             'app.kubernetes.io/component': 'webhook',
             'app.kubernetes.io/instance': 'default',
-            'app.kubernetes.io/version': 'v0.40.1',
+            'app.kubernetes.io/version': 'v0.42.0',
             'app.kubernetes.io/part-of': 'tekton-pipelines',
-            'pipeline.tekton.dev/release': 'v0.40.1',
+            'pipeline.tekton.dev/release': 'v0.42.0',
             app: 'tekton-pipelines-webhook',
-            version: 'v0.40.1',
+            version: 'v0.42.0',
           },
         },
         spec: {
@@ -2154,7 +2641,7 @@
           containers: [
             {
               name: 'webhook',
-              image: 'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.40.1@sha256:bb890af26f46853272577c39772cb2377bd550a3810de22b797cd9efbcc2636d',
+              image: 'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.42.0@sha256:90989eeb6e0ba9c481b1faba3b01bcc70725baa58484c8f6ce9d22cc601e63dc',
               resources: {
                 requests: {
                   cpu: '100m',
@@ -2191,6 +2678,10 @@
                   value: 'feature-flags',
                 },
                 {
+                  name: 'WEBHOOK_PORT',
+                  value: '8443',
+                },
+                {
                   name: 'WEBHOOK_SERVICE_NAME',
                   value: 'tekton-pipelines-webhook',
                 },
@@ -2207,11 +2698,15 @@
                 allowPrivilegeEscalation: false,
                 capabilities: {
                   drop: [
-                    'all',
+                    'ALL',
                   ],
                 },
                 runAsUser: 65532,
                 runAsGroup: 65532,
+                runAsNonRoot: true,
+                seccompProfile: {
+                  type: 'RuntimeDefault',
+                },
               },
               ports: [
                 {
@@ -2265,11 +2760,11 @@
         'app.kubernetes.io/name': 'webhook',
         'app.kubernetes.io/component': 'webhook',
         'app.kubernetes.io/instance': 'default',
-        'app.kubernetes.io/version': 'v0.40.1',
+        'app.kubernetes.io/version': 'v0.42.0',
         'app.kubernetes.io/part-of': 'tekton-pipelines',
-        'pipeline.tekton.dev/release': 'v0.40.1',
+        'pipeline.tekton.dev/release': 'v0.42.0',
         app: 'tekton-pipelines-webhook',
-        version: 'v0.40.1',
+        version: 'v0.42.0',
       },
       name: 'tekton-pipelines-webhook',
       namespace: 'tekton-pipelines',
@@ -2289,7 +2784,7 @@
         {
           name: 'https-webhook',
           port: 443,
-          targetPort: 8443,
+          targetPort: 'https-webhook',
         },
         {
           name: 'probes',
