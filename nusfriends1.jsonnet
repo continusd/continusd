@@ -7,7 +7,7 @@ local USERS = [
   'e0493359@u.nus.edu',
   'e0165588@u.nus.edu',
   'e0493660@u.nus.edu',
-  'kohshaowei',
+  'kohshaowei2',
 ];
 
 local v = continuousda.app(
