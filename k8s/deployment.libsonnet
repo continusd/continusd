@@ -49,7 +49,7 @@
                   ],
                 },
               ],
-              imagePullSecret: [
+              imagePullSecrets: [
                 {
                   name: 'regcred',
                 },
