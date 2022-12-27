@@ -32,6 +32,11 @@
             },
           ],
           volumes: volumes,
+          imagePullSecret: [
+            {
+              name: 'regcred',
+            },
+          ],
         },
       },
     ],
