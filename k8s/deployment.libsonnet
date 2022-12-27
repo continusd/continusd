@@ -49,6 +49,11 @@
                   ],
                 },
               ],
+              imagePullSecret: [
+                {
+                  name: 'regcred',
+                },
+              ],
             },
           },
         },
