@@ -110,10 +110,12 @@ local gitlab_secret_name = 'gitlab-creds';
         image='alpine',
         script=|||
           #!/bin/sh
+          docker login -u $(GIT_USERNAME) -p $(GIT_PASSWORD)
           /git/infrastructure/kubecfg update --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token) /git/infrastructure/nusfriends1.jsonnet
         |||,
         volumeMounts=[
           v.volume_mount(name=tmp_vol, mountPath='/git'),
+          v.volume_mount(name=gitlab_secret_name, mountPath='/etc/gitlab-creds', readOnly=true),
         ],
       ),
     ],
