@@ -1,5 +1,5 @@
-local tekton_dashboard = import 'tekton/dashboard.jsonnet';
-local tekton_pipeline_base = import 'tekton/pipeline-base.jsonnet';
+local tekton_dashboard = import '../lib/tekton/dashboard.jsonnet';
+local tekton_pipeline_base = import '../lib/tekton/pipeline-base.jsonnet';
 
 [
   tekton_pipeline_base,

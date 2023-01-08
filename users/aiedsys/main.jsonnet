@@ -1,7 +1,7 @@
 local continuousda = import '../../lib/continuousd/app.libsonnet';
 local continuousdr = import '../../lib/continuousd/read_access_role.libsonnet';
 
-local NAMESPACE = 'nusfriends-1';
+local NAMESPACE = 'aiedsys';
 
 local USERS = [
   'e0493359@u.nus.edu',
@@ -12,7 +12,7 @@ local USERS = [
 
 local v = continuousda.app(
             namespace=NAMESPACE,
-            name='nus-jira-app',
+            name='aiedsys',
             image='registry.gitlab.com/continusd/infrastructure/nusfriends-1:1',
             containerPort=80,
             targetPort=80,
