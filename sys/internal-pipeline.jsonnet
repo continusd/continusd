@@ -4,10 +4,10 @@ local p = import '../lib/tekton/pipeline.libsonnet';
 local t = import '../lib/tekton/task.libsonnet';
 local v = import '../lib/tekton/volume.libsonnet';
 
-local pipeline_name = 'nusfriends-1-app-pipeline';
+local pipeline_name = 'aiedsys-app-pipeline';
 local task_1 = 'deploy-application';
 local tmp_vol = 'temp-vol';
-local namespace = 'nusfriends-1';
+local namespace = 'aiedsys';
 local service_account_name = 'tekton-service-account';
 local gitlab_secret_name = 'gitlab-creds';
 
