@@ -1,8 +1,8 @@
-local continuousdr = import 'continuousd/read_access_role.libsonnet';
-local s = import 'k8s/serviceaccount.libsonnet';
-local p = import 'tekton/pipeline.libsonnet';
-local t = import 'tekton/task.libsonnet';
-local v = import 'tekton/volume.libsonnet';
+local continuousdr = import '../lib/continuousd/read_access_role.libsonnet';
+local s = import '../lib/k8s/serviceaccount.libsonnet';
+local p = import '../lib/tekton/pipeline.libsonnet';
+local t = import '../lib/tekton/task.libsonnet';
+local v = import '../lib/tekton/volume.libsonnet';
 
 local pipeline_name = 'nusfriends-1-app-pipeline';
 local task_1 = 'deploy-application';
