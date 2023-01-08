@@ -1,5 +1,5 @@
-local continuousda = import 'continuousd/app.libsonnet';
-local continuousdr = import 'continuousd/read_access_role.libsonnet';
+local continuousda = import '../../lib/continuousd/app.libsonnet';
+local continuousdr = import '../../lib/continuousd/read_access_role.libsonnet';
 
 local NAMESPACE = 'nusfriends-1';
 
