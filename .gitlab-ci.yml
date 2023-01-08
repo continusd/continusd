@@ -22,24 +22,24 @@ stages:
 # 1. Check if any main file is changed
 # Fail the pipeline if any main file is changed (user should not have rights to modify main files)
 # Skip the pipeline if none of the main files is changed
-check-files-changed:
-  stage: validate
-    #rules: 
-    #  - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    #    changes:
-    #      - continuousd/*
-    #      - k8s/*
-    #      - tekton/*
-    #      - users/namespaces/nusfriends1/**/*
-    #      - sys/internal-docker-registry.jsonnet
-    #      - sys/internal-tekton.jsonnet
-    #      - sys/internal_namespaces.jsonnet
-    #      - sys/test_pipeline.jsonnet
-    #      - users/aiedsys/main.jsonnet
-    #      - kubecfg
-  script:
-  - echo "You do not have the rights to modify files outside of your namespace :("
-  - exit 1
+#check-files-changed:
+#  stage: validate
+#  rules: 
+#    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+#      changes:
+#        - continuousd/*
+#        - k8s/*
+#        - tekton/*
+#        - users/namespaces/nusfriends1/**/*
+#        - sys/internal-docker-registry.jsonnet
+#        - sys/internal-tekton.jsonnet
+#        - sys/internal_namespaces.jsonnet
+#        - sys/test_pipeline.jsonnet
+#        - users/aiedsys/main.jsonnet
+#        - kubecfg
+#  script:
+#  - echo "You do not have the rights to modify files outside of your namespace :("
+#  - exit 1
 
 # Check if any file in user namespace is changed
 # Pass the pipeline if user only changed the files inside own's namespace
