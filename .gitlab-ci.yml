@@ -30,16 +30,13 @@ check-files-changed:
         - continuousd/*
         - k8s/*
         - tekton/*
-        - namespaces/nusfriends1/**/*
-        - internal-docker-registry.jsonnet
-        - internal-tekton.jsonnet
-        - internal_namespaces.jsonnet
+        - users/namespaces/nusfriends1/**/*
+        - sys/internal-docker-registry.jsonnet
+        - sys/internal-tekton.jsonnet
+        - sys/internal_namespaces.jsonnet
+        - sys/test_pipeline.jsonnet
+        - users/aiedsys/main.jsonnet
         - kubecfg
-        - test_deployment.jsonnet
-        - test_git_pod.jsonnet
-        - test_pipeline.jsonnet
-        - test_service.jsonnet
-        - test_task.jsonnot
   script:
   - echo "You do not have the rights to modify files outside of your namespace :("
   - exit 1
@@ -73,7 +70,7 @@ deploy-app:
 
     # This will deploy into k8s cluster via Tekton Pipeline
     - echo "--- Deloy nusfriends to k8s via Tekton Pipeline"
-    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update test_pipeline.jsonnet
+    - ./kubecfg --ext-str "CI_COMMIT_SHA=$CI_COMMIT_SHA" update sys/internal-pipeline.jsonnet
     
     # Display logs from Tekton Pipeline
     - echo "--- Show Tekton PipelineRun logs"
