@@ -99,7 +99,7 @@ local gitlab_secret_name = 'gitlab-creds';
         image='alpine',
         script=|||
           #!/bin/sh
-          /git/infrastructure/kubecfg show /git/infrastructure/nusfriends1.jsonnet
+          /git/infrastructure/kubecfg show /git/infrastructure/users/aiedsys/main.jsonnet
         |||,
         volumeMounts=[
           v.volume_mount(name=tmp_vol, mountPath='/git'),
@@ -110,7 +110,7 @@ local gitlab_secret_name = 'gitlab-creds';
         image='alpine',
         script=|||
           #!/bin/sh
-          /git/infrastructure/kubecfg update --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token) /git/infrastructure/nusfriends1.jsonnet
+          /git/infrastructure/kubecfg update --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token) /git/infrastructure/users/aiedsys/main.jsonnet
         |||,
         volumeMounts=[
           v.volume_mount(name=tmp_vol, mountPath='/git'),
