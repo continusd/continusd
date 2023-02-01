@@ -13,10 +13,10 @@ local USERS = [
 local v = continuousda.app(
             namespace=NAMESPACE,
             name='aiedsys',
-            image='registry.gitlab.com/continusd/infrastructure/nusfriends-1:1',
-            containerPort=80,
-            targetPort=80,
-            port=8089,
+            image='registry.gitlab.com/continusd/infrastructure/aiedsys-1:1',
+            containerPort=3000,
+            targetPort=3000,
+            port=3000,
             replicas=1,
           ) +
           [
