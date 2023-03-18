@@ -76,9 +76,9 @@ deploy-app:
     - echo "--- Show Tekton PipelineRun logs"
     - kubectl logs -n aiedsys --selector=tekton.dev/pipelineRun=$CI_COMMIT_SHA -f --all-containers --max-log-requests=8 --pod-running-timeout=45s --previous=false --ignore-errors=true
 
-    # Hardcoded show external IP 
-    - echo "--- Your App is Running on IP ADDRESS..."
-    - kubectl get services -n aiedsys aiedsys-service --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
+    # Hardcoded show external api gateway subdomains
+    - echo "--- Your App is Running on..."
+    - kubectl get ingresses.networking.k8s.io -n aiedsys --output jsonpath='{range .items[0].spec.rules[*]}{.host}{"\n"}{end}'
 
     # Dashboard instructions
     - echo "--- Dashboard Details"
