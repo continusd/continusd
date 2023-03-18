@@ -1,12 +1,17 @@
+local b = import '../k8s/dashboard.libsonnet';
 local d = import '../k8s/deployment.libsonnet';
 local n = import '../k8s/namespace.libsonnet';
 local s = import '../k8s/service.libsonnet';
-local b = import '../k8s/dashboard.libsonnet';
 
 /**
   * app is a nodejs application.
   */
 {
+  namespace(
+    name='',
+  ):: [
+    n.namespace(name),
+  ],
   app(
     namespace='',
     name='',
@@ -17,18 +22,21 @@ local b = import '../k8s/dashboard.libsonnet';
     port=8080,
     dashboardPort=3000,
     serviceType='LoadBalancer',
+    volumes=[],
+    volumeMounts=[],
   )::
     assert namespace != '' : 'namespace is required';
     assert name != '' : 'name is required';
     assert image != '' : 'image is required';
     [
-      n.namespace(namespace),
       d.deployment(
         namespace=namespace,
         image=image,
         appName=name,
         containerPort=containerPort,
         replicas=replicas,
+        volumes=volumes,
+        volumeMounts=volumeMounts,
       ),
       s.service(
         namespace=namespace,
@@ -38,11 +46,5 @@ local b = import '../k8s/dashboard.libsonnet';
         port=port,
         targetPort=targetPort,
       ),
-      b.dashboard(
-        namespace=namespace,
-        name=name,
-        dashboardPort=dashboardPort,
-        serviceType=serviceType,
-      )
     ],
 }

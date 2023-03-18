@@ -9,6 +9,8 @@
     appName='',
     replicas=1,
     containerPort=80,
+    volumes=[],
+    volumeMounts=[],
   )::
     local nameLocal = if name == '' then appName + '-deployment' else name;
     assert appName != '' : 'appName is required';
@@ -38,6 +40,7 @@
               },
             },
             spec: {
+              volumes: volumes,
               containers: [
                 {
                   name: appName,
@@ -47,6 +50,7 @@
                       containerPort: containerPort,
                     },
                   ],
+                  volumeMounts: volumeMounts,
                 },
               ],
               imagePullSecrets: [

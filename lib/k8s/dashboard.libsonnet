@@ -18,7 +18,6 @@ local a = import './serviceaccount.libsonnet';
     image='kubernetesui/dashboard:v2.6.1',
     targetPort=8443,
     port=443,
-    serviceType,
     dashboardPort=3000,
     scrapperPort=8000
   )::
