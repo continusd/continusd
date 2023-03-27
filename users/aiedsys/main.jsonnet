@@ -12,17 +12,17 @@ continuousda.namespace(NAMESPACE)
 continuousda.app(
   namespace=NAMESPACE,
   name='aiedsys-frontend',
-  image='registry.gitlab.com/continusd/infrastructure/aiedsys-frontend:4',
+  image='registry.gitlab.com/continusd/infrastructure/aiedsys-frontend:7',
   containerPort=3000,
   targetPort=3000,
   port=3000,
-  replicas=2,
+  replicas=3,
   serviceType='ClusterIP'  // only accessible within the cluster
 ) +
 continuousda.app(
   namespace=NAMESPACE,
   name='aiedsys-dashboard',
-  image='registry.gitlab.com/continusd/infrastructure/aiedsys-dashboard:3',
+  image='registry.gitlab.com/continusd/infrastructure/aiedsys-dashboard:4',
   containerPort=5000,
   targetPort=5000,
   port=5000,
@@ -32,7 +32,7 @@ continuousda.app(
 continuousda.app(
   namespace=NAMESPACE,
   name='aiedsys-learning-path',
-  image='registry.gitlab.com/continusd/infrastructure/aiedsys-learning-path:7',
+  image='registry.gitlab.com/continusd/infrastructure/aiedsys-learning-path:9',
   containerPort=5000,
   targetPort=5000,
   port=5000,
@@ -42,7 +42,7 @@ continuousda.app(
 continuousda.app(
   namespace=NAMESPACE,
   name='aiedsys-quizzes',
-  image='registry.gitlab.com/continusd/infrastructure/aiedsys-quizzes:4',
+  image='registry.gitlab.com/continusd/infrastructure/aiedsys-quizzes:5',
   containerPort=4500,
   targetPort=4500,
   port=4500,
@@ -52,7 +52,7 @@ continuousda.app(
 continuousda.app(
   namespace=NAMESPACE,
   name='aiedsys-assignments',
-  image='registry.gitlab.com/continusd/infrastructure/aiedsys-assignments:9',
+  image='registry.gitlab.com/continusd/infrastructure/aiedsys-assignments:10',
   containerPort=5000,
   targetPort=5000,
   port=5000,
@@ -62,7 +62,7 @@ continuousda.app(
 continuousda.app(
   namespace=NAMESPACE,
   name='aiedsys-python-scripts',
-  image='registry.gitlab.com/continusd/infrastructure/aiedsys-python-scripts:4',
+  image='registry.gitlab.com/continusd/infrastructure/aiedsys-python-scripts:6',
   containerPort=4800,
   targetPort=4800,
   port=4800,
@@ -76,6 +76,7 @@ continuousda.app(
   containerPort=27017,
   targetPort=27017,
   port=27017,
+  appProtocol='mongo',
   replicas=1,
   serviceType='ClusterIP',  // only accessible within the cluster
   volumes=[
@@ -95,7 +96,7 @@ continuousda.app(
 ) +
 continuousdd.dashboard(
   namespace=NAMESPACE,
-  name='aiedsys-dashboard',
+  name='aiedsys-kubernetes-dashboard',
 )
 +
 [

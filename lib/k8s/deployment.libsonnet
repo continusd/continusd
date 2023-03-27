@@ -15,6 +15,7 @@
     local nameLocal = if name == '' then appName + '-deployment' else name;
     assert appName != '' : 'appName is required';
     assert image != '' : 'image is required';
+    local version = '1';
     [
       {
         apiVersion: 'apps/v1',
@@ -24,6 +25,8 @@
           namespace: namespace,
           labels: {
             'app.kubernetes.io/name': appName,
+            app: appName,
+            version: version,
           },
         },
         spec: {
@@ -37,6 +40,8 @@
             metadata: {
               labels: {
                 'app.kubernetes.io/name': appName,
+                app: appName,
+                version: version,
               },
             },
             spec: {

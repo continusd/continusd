@@ -1,0 +1,15 @@
+apiVersion: "monitoring.coreos.com/v1alpha1"
+kind: "ServiceMonitor"
+jobLabel: traefik-metrics
+selector:
+  matchLabels:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik-dashboard-service
+namespaceSelector:
+  matchNames:
+  - default
+  - kube-system
+  - aiedsys
+endpoints:
+- port: traefik
+  path: /metrics

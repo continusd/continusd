@@ -24,6 +24,7 @@ local s = import '../k8s/service.libsonnet';
     serviceType='LoadBalancer',
     volumes=[],
     volumeMounts=[],
+    appProtocol='http',
   )::
     assert namespace != '' : 'namespace is required';
     assert name != '' : 'name is required';
@@ -45,6 +46,7 @@ local s = import '../k8s/service.libsonnet';
         serviceType=serviceType,
         port=port,
         targetPort=targetPort,
+        appProtocol=appProtocol,
       ),
     ],
 }

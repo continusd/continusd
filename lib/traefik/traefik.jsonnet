@@ -97,6 +97,10 @@
           labels: {
             app: 'traefik',
           },
+          annotations: {
+            'prometheus.io/scrape': 'true',
+            'prometheus.io/port': '80',
+          },
         },
         spec: {
           serviceAccountName: 'traefik-account',
@@ -109,6 +113,11 @@
                 '--api.insecure',
                 '--providers.kubernetesingress',
                 '--accesslog',
+                '--log.level=DEBUG',
+                '--metrics',
+                '--metrics.prometheus=true',
+                '--metrics.prometheus.buckets=0.1,0.3,1.2,5.0,10.0',
+                '--metrics.prometheus.addServicesLabels=true',
               ],
               ports: [
                 {
