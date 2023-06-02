@@ -1,9 +1,9 @@
 <p align="center">
   <br />
-  <a title="Learn more about GitLens" href="https://gitkraken.com/gitlens?utm_source=gitlens-extension&utm_medium=in-app-links&utm_campaign=gitlens-logo-links"><img width="476px" src="https://raw.githubusercontent.com/gitkraken/vscode-gitlens/main/images/docs/gitlens-logo-anybg.png" alt="GitLens Logo" /></a>
+  <a title="Learn more about ContiNUSd" href=""><img width="180px" src="./images/continusd-logo.png" alt="ContiNUSd Logo" /></a>
 </p>
 
-> GitLens **supercharges** Git inside VS Code and unlocks **untapped knowledge** within each repository. It helps you to **visualize code authorship** at a glance via Git blame annotations and CodeLens, **seamlessly navigate and explore** Git repositories, **gain valuable insights** via rich visualizations and powerful comparison commands, and so much more.
+> ContiNUSd **supercharges** your learning experience in Kubernetes and containerization directly inside VS Code, **unlocking untapped knowledge** in these complex areas. It helps you to **visualize Kubernetes deployments and pods** at a glance, **seamlessly navigate and explore** containerized applications, **gain valuable insights** via rich visualizations and powerful Kubernetes commands, and so much more. Built with learners in mind, ContiNUSd makes mastering Kubernetes and containerization accessible and convenient, all within your familiar VS Code environment.
 
 <p align="center">
   <br />
