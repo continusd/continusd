@@ -1,0 +1,5 @@
+{
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.panel.opensMaximized": "always",
+    "window.title": "🐳 ContiNUSd: ${activeEditorShort}${separator}${rootName}${separator}${profileName}"
+}
