@@ -1,5 +1,9 @@
 {
-    "workbench.colorTheme": "Default Dark+",
+    "workbench.colorTheme": "Default Light+",
     "workbench.panel.opensMaximized": "always",
-    "window.title": "🐳 ContiNUSd: ${activeEditorShort}${separator}${rootName}${separator}${profileName}"
+    "window.title": "🐳 ContiNUSd: ${activeEditorShort}${separator}${rootName}${separator}${profileName}",
+    "markdown.preview.lineHeight": 1.7,
+    "[markdown]": {
+        "workbench.editor.languageDetection": true
+    }
 }
