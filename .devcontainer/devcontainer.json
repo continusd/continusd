@@ -36,7 +36,9 @@
 		  // Add the IDs of extensions you want installed when the container is created.
 		  "extensions": [
 			"cverge.jsonnet-lsp",
-			"grafana.vscode-jsonnet"
+			"grafana.vscode-jsonnet",
+			"vsls-contrib.codetour",
+			"ms-kubernetes-tools.vscode-kubernetes-tools"
 		  ]
 		}
 	}
