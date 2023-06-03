@@ -37,7 +37,8 @@
 		  "extensions": [
 			"cverge.jsonnet-lsp",
 			"grafana.vscode-jsonnet",
-			"vsls-contrib.codetour"
+			"vsls-contrib.codetour",
+			"ms-kubernetes-tools.vscode-kubernetes-tools"
 		  ]
 		}
 	}
