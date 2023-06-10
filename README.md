@@ -9,6 +9,20 @@
 
 # Get Started
 
-When your Codespace is all set up, you'll see the VS Code editor on your screen. Hold tight for a moment as your terminal completes its setup - this usually takes around 5 minutes.
+## Step 1:
+First, go to the github repo and open a new codespace. Codespaces are free for students under github education.
+![Image](https://raw.githubusercontent.com/continusd/continusd/main/images/codespaces-on-github.png)
+
+## Step 2:
+Wait for Codespace to setup, it should take about 5-7 minutes.
+
+![Image](https://raw.githubusercontent.com/continusd/continusd/main/images/readme-step2.png)
+![Image](https://raw.githubusercontent.com/continusd/continusd/main/images/readme-step2a.png)
+![Image](https://raw.githubusercontent.com/continusd/continusd/main/images/readme-step2b.png)
+
+It's ready when you see the last image.
+
+## Step 3:
+![Image](https://raw.githubusercontent.com/continusd/continusd/main/images/readme-step3.png)
 
 After the setup is finished, you're all ready to begin your learning journey. Look for the "CODETOUR" button on the bottom left of your screen and give it a click to get started. Enjoy!
